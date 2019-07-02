@@ -11,6 +11,16 @@ return [
         '0' => 'User',
         '10' => 'Admin',
     ],
+    'position' => [
+        '0' => 'Developer',
+        '1' => 'Quality Assurance',
+        '2' => 'Project Manager',
+    ],
+    'department' => [
+        '0' => 'PHP',
+        '1' => 'Python',
+        '2' => 'Project Management',
+    ],
     
     'status' => [
         '1' => 'Active',

@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->text('bio')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

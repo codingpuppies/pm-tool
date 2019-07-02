@@ -11,8 +11,14 @@ Auth::routes();
 Route::group(['prefix' => ADMIN, 'as' => ADMIN . '.', 'middleware'=>['auth', 'Role:10']], function () {
     Route::get('/', 'DashboardController@index')->name('dash');
     Route::resource('users', 'UserController');
+    Route::resource('projects', 'ProjectController');
+    Route::resource('developers', 'DeveloperController');
 });
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/home', function () {
+    return view('admin.dashboard.index');
 });

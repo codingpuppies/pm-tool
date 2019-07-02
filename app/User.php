@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -45,6 +47,7 @@ class User extends Authenticatable
     */
     public static function rules($update = false, $id = null)
     {
+
         $commun = [
             'email'    => "required|email|unique:users,email,$id",
             'password' => 'nullable|confirmed',
@@ -59,6 +62,7 @@ class User extends Authenticatable
             'email'    => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
         ]);
+
     }
 
     /*

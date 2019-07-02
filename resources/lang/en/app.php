@@ -3,7 +3,7 @@
 return [
 
 	// My controllers
-	"success_store"   => "Item added",
+	"success_store"   => "Record added",
 	"success_update"  => "Updated successfully",
 	"success_destroy" => "Removed successfully",
 
