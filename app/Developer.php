@@ -11,7 +11,7 @@ class Developer extends Model
 
     protected $table = 'developers';
     protected $fillable = [
-        'first_name', 'middle_name','last_name', 'email', 'position', 'department','user_id','employee_number','status'
+        'salary', 'first_name', 'middle_name','last_name', 'email', 'position', 'department','user_id','employee_number','status'
     ];
 
     /*

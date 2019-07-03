@@ -13,6 +13,14 @@ Route::group(['prefix' => ADMIN, 'as' => ADMIN . '.', 'middleware'=>['auth', 'Ro
     Route::resource('users', 'UserController');
     Route::resource('projects', 'ProjectController');
     Route::resource('developers', 'DeveloperController');
+    Route::resource('projectdevelopers', 'ProjectDeveloperController');
+});
+
+Route::group(['prefix' => ADMIN, 'as' => ADMIN . '.', 'middleware'=>['auth', 'Role:0']], function () {
+//    Route::get('/', 'DashboardController@index')->name('dash');
+//    Route::resource('users', 'UserController');
+//    Route::resource('projects', 'ProjectController');
+//    Route::resource('developers', 'DeveloperController');
 });
 
 Route::get('/', function () {

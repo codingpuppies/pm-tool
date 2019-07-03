@@ -12,27 +12,42 @@
         <span class="title">Dashboard</span>
     </a>
 </li>
-<li class="nav-item">
-    <a class="sidebar-link {{ starts_with($route, ADMIN . '.users') ? 'active' : '' }}" href="{{ route(ADMIN . '.users.index') }}">
-        <span class="icon-holder">
-            <i class="c-brown-500 ti-user"></i>
-        </span>
-        <span class="title">Users</span>
-    </a>
-</li>
-<li class="nav-item">
-    <a class="sidebar-link {{ starts_with($route, ADMIN . '.developers') ? 'active' : '' }}" href="{{ route(ADMIN . '.developers.index') }}">
-        <span class="icon-holder">
-            <i class="c-brown-500 ti-wand"></i>
-        </span>
-        <span class="title">Developers</span>
-    </a>
-</li>
+
 <li class="nav-item">
     <a class="sidebar-link {{ starts_with($route, ADMIN . '.projects') ? 'active' : '' }}" href="{{ route(ADMIN . '.projects.index') }}">
         <span class="icon-holder">
-            <i class="c-brown-500 ti-server"></i>
+            <i class="c-orange-500 ti-server"></i>
         </span>
         <span class="title">Projects</span>
     </a>
 </li>
+<ul>
+
+</ul>
+<li class="nav-item">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.projectdevelopers') ? 'active' : '' }}" href="{{ route(ADMIN . '.projectdevelopers.index') }}">
+        <span class="icon-holder">
+            <i class="c-purple-500 fa fa-users"></i>
+        </span>
+        <span class="title">Project Developers</span>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.developers') ? 'active' : '' }}" href="{{ route(ADMIN . '.developers.index') }}">
+        <span class="icon-holder">
+            <i class="c-green-500 fa fa-user-circle"></i>
+        </span>
+        <span class="title">Developers</span>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.users') ? 'active' : '' }}" href="{{ route(ADMIN . '.users.index') }}">
+        <span class="icon-holder">
+            <i class="c-red-500 fa fa-key"></i>
+        </span>
+        <span class="title">Users</span>
+    </a>
+</li>
+

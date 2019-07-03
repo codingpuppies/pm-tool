@@ -1,14 +1,14 @@
-<?php 
+<?php
 
-if (! function_exists('move_file')) {
-    function move_file($file, $type='avatar', $withWatermark = false)
+if (!function_exists('move_file')) {
+    function move_file($file, $type = 'avatar', $withWatermark = false)
     {
         // Grab all variables
-        $destinationPath = config('variables.'.$type.'.folder');
-        $width           = config('variables.' . $type . '.width');
-        $height          = config('variables.' . $type . '.height');
-        $full_name       = str_random(16) . '.' . $file->getClientOriginalExtension();
-        
+        $destinationPath = config('variables.' . $type . '.folder');
+        $width = config('variables.' . $type . '.width');
+        $height = config('variables.' . $type . '.height');
+        $full_name = str_random(16) . '.' . $file->getClientOriginalExtension();
+
         if ($width == null && $height == null) { // Just move the file
             $file->storeAs($destinationPath, $full_name);
             return $full_name;
@@ -16,13 +16,13 @@ if (! function_exists('move_file')) {
 
 
         // Create the Image
-        $image           = Image::make($file->getRealPath());
+        $image = Image::make($file->getRealPath());
 
         if ($width == null || $height == null) {
             $image->resize($width, $height, function ($constraint) {
                 $constraint->aspectRatio();
             });
-        }else{
+        } else {
             $image->fit($width, $height);
         }
 
@@ -32,8 +32,44 @@ if (! function_exists('move_file')) {
             $image->insert($watermark, 'center');
         }
 
-        Storage::put($destinationPath . '/' . $full_name, (string) $image->encode());
+        Storage::put($destinationPath . '/' . $full_name, (string)$image->encode());
 
         return $full_name;
     }
+}
+
+function compute_month_diff($date1, $date2)
+{
+    $month = 0;
+    $year = 0;
+    $duration = '';
+
+    $d1 = new DateTime($date1);
+    $d2 = new DateTime($date2);
+
+    $interval = $d2->diff($d1);
+    $total = $interval->m + ($interval->y * 12);
+    return $total == 0 ? $interval->d.' days' : $total.' months';
+//   /* $year = $interval / 12;
+//    $month = $interval % 12;
+//
+//    if ($interval > 12) {
+//       if($year > 1){
+//           $duration .= $year.' years';
+//       }else{
+//           $duration .= $year.' year';
+//       }
+//    }
+//
+//    if(($year != 0) && ($month > 1)){
+//        $duration .= ' and ';
+//    }
+//
+//    if($month > 1){
+//        $duration .= $month.' months';
+//    }else{
+//        $duration .= $month.' month';
+//    }
+//
+//    return $duration;*/
 }

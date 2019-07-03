@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Developer;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class DeveloperController extends Controller
 {
@@ -33,7 +34,7 @@ class DeveloperController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -42,13 +43,15 @@ class DeveloperController extends Controller
         $this->validate($request, User::rules());
 
         $user = User::create([
-            'name' => $request->first_name.' '.$request->last_name,
+            'name' => $request->first_name . ' ' . $request->last_name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'role' => $request->position,
+            'password' => $request->password,
         ]);
 
         Developer::create([
             'user_id' => $user->id,
+            'salary' => $request->salary,
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
@@ -65,7 +68,7 @@ class DeveloperController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -76,7 +79,7 @@ class DeveloperController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -89,8 +92,8 @@ class DeveloperController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -99,16 +102,17 @@ class DeveloperController extends Controller
 
         $user = User::findOrFail($item->user_id);
 
-        $this->validate($request, Developer::rules(true,$id));
+        $this->validate($request, Developer::rules(true, $id));
         $this->validate($request, User::rules(true, $user->id));
 
         $user->update([
-            'name' => $request->first_name.' '.$request->last_name,
+            'name' => $request->first_name . ' ' . $request->last_name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
 
-         $item->update([
+        $item->update([
+            'salary' => $request->salary,
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
@@ -125,7 +129,7 @@ class DeveloperController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

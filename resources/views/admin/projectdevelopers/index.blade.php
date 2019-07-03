@@ -1,7 +1,7 @@
 @extends('admin.default')
 
 @section('page-header')
-    Projects
+    Project Developers
     <small>{{ trans('app.manage') }}</small>
 @endsection
 
@@ -9,7 +9,7 @@
 
     <div class="mB-20">
         <a href="{{ route(ADMIN . '.projects.create') }}" class="btn btn-info">
-            {{ trans('app.add_button') }}
+            {{ trans('app.add_button') }} Project
         </a>
     </div>
 
@@ -19,24 +19,17 @@
             <thead>
             <tr>
                 <th>Project Name</th>
-                <th>Description</th>
-                <th>TCP</th>
-                <th>Duration</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
+                <th>Project Manager</th>
+                <th>Developers</th>
                 <th>Action</th>
             </tr>
             </thead>
 
             <tfoot>
             <tr>
-                <th>Description</th>
-                <th>TCP</th>
-                <th>Duration</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
+                <th>Project Name</th>
+                <th>Project Manager</th>
+                <th>Developers</th>
                 <th>Action</th>
             </tr>
             </tfoot>
@@ -54,21 +47,13 @@
                     <td>
                         <ul class="list-inline">
                             <li class="list-inline-item">
-                                <a href="{{ route(ADMIN . '.projectdevelopers.edit', $item->id) }}"
-                                   title="Manage Project Developers" class="btn btn-success btn-sm"><span
-                                            class="fa fa-users"></span>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="{{ route(ADMIN . '.projects.edit', $item->id) }}"
+                                <a href="{{ route(ADMIN . '.project_developers.edit', $item->id) }}"
                                    title="{{ trans('app.edit_title') }}" class="btn btn-primary btn-sm"><span
-                                            class="ti-pencil"></span>
-                                </a>
-                            </li>
+                                            class="ti-pencil"></span></a></li>
                             <li class="list-inline-item">
                                 {!! Form::open([
                                     'class'=>'delete',
-                                    'url'  => route(ADMIN . '.projects.destroy', $item->id),
+                                    'url'  => route(ADMIN . '.project_developers.destroy', $item->id),
                                     'method' => 'DELETE',
                                     ])
                                 !!}

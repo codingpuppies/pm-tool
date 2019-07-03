@@ -42,14 +42,14 @@ class ProjectController extends Controller
         $this->validate($request, Project::rules());
 
         Project::create([
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'position' => $request->position,
-            'department' => $request->department,
-            'employee_number' => $request->employee_number,
-            'status' => 1,
+            'project_name' => $request->project_name,
+            'description' => $request->description,
+            'estimated_start_date' => $request->estimated_start_date,
+            'estimated_end_date' => $request->estimated_end_date,
+            'actual_start_date' => $request->estimated_start_date,
+            'actual_end_date' => $request->estimated_end_date,
+            'tcp' => $request->tcp,
+            'status' => $request->status,
         ]);
 
         return back()->withSuccess(trans('app.success_store'));
@@ -90,17 +90,17 @@ class ProjectController extends Controller
     {
         $item = Project::findOrFail($id);
 
-        $this->validate($request, Developer::rules(true,$id));
+        $this->validate($request, Project::rules(true,$id));
 
         $item->update([
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'position' => $request->position,
-            'department' => $request->department,
-            'employee_number' => $request->employee_number,
-            'status' => 1,
+            'project_name' => $request->project_name,
+            'description' => $request->description,
+            'estimated_start_date' => $request->estimated_start_date,
+            'estimated_end_date' => $request->estimated_end_date,
+            'actual_start_date' => $request->estimated_start_date,
+            'actual_end_date' => $request->estimated_end_date,
+            'tcp' => $request->tcp,
+            'status' => $request->status,
         ]);
 
         return redirect()->route(ADMIN . '.projects.index')->withSuccess(trans('app.success_update'));

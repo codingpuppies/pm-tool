@@ -22,6 +22,7 @@ class CreateDevelopersTable extends Migration
             $table->string('employee_number');
             $table->string('email');
             $table->integer('status');
+            $table->integer('salary');
             $table->string('position');
             $table->string('department');
             $table->timestamps();

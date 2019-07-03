@@ -5,14 +5,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Project extends Model
+class ProjectDeveloper extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'projects';
+    protected $table = 'project_developer';
 
     protected $fillable = [
-        'project_name', 'description','estimated_start_date', 'estimated_end_date', 'actual_start_date', 'actual_end_date','tcp','status'
+        'project_id', 'developer_id', 'date_start', 'date_end'
     ];
 
     /*
@@ -23,10 +23,9 @@ class Project extends Model
     public static function rules($update = false, $id = null)
     {
         $commun = [
-            'project_name'    => "required"
+//            'project_name'    => "required"
         ];
 
-       return $commun;
+        return $commun;
     }
-
 }

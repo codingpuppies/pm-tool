@@ -8,8 +8,17 @@ return [
     ],
 
     'role' => [
-        '0' => 'User',
+        '0' => 'Developer',
+        '1' => 'Quality Assurance',
+        '2' => 'Project Manager',
         '10' => 'Admin',
+    ],
+
+    'role_code' => [
+        'DEVELOPER' => '0',
+        'QA' => '1',
+        'PM' => '2',
+        'ADMIN' => '10',
     ],
     'position' => [
         '0' => 'Developer',
@@ -33,6 +42,19 @@ return [
         
         'width'  => 400,
         'height' => 400,
+    ],
+
+    'duration' => [
+        'ONE_MONTH'  => 1,
+        'YEAR' => 12,
+    ],
+
+    'project_status' => [
+        '0' => 'INACTIVE',
+        '1' => 'ACTIVE',
+        '2' => 'ON-HOLD',
+        '3' => 'CANCELLED',
+        '4' => 'COMPLETED',
     ],
 
     /*

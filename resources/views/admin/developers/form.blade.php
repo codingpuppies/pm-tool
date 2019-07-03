@@ -10,7 +10,9 @@
 			{!! Form::myInput('text', 'last_name', 'Last Name') !!}
 
 			{!! Form::myInput('email', 'email', 'Email') !!}
-		
+
+			{!! Form::myInput('text', 'salary', 'Salary') !!}
+
 			{!! Form::mySelect('position', 'Position', config('variables.position'), null, ['class' => 'form-control select2']) !!}
 
 			{!! Form::mySelect('department', 'Department', config('variables.department'), null, ['class' => 'form-control select2']) !!}
