@@ -15,11 +15,12 @@ return [
     ],
 
     'role_code' => [
-        'DEVELOPER' => '0',
-        'QA' => '1',
-        'PM' => '2',
-        'ADMIN' => '10',
+        'DEVELOPER' => 0,
+        'QA' => 1,
+        'PM' => 2,
+        'ADMIN' => 10,
     ],
+
     'position' => [
         '0' => 'Developer',
         '1' => 'Quality Assurance',

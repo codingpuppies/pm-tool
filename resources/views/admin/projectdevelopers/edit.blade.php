@@ -144,27 +144,29 @@
                         <div class="layer w-100 mB-20">
                             <h6 class="lh-1">Assigned Developers</h6>
                         </div>
-                        <div class="form-group">
-                            <label for="slct_pm">Project Manager</label>
+{{--                        <div class="form-group">--}}
+{{--                            <label for="slct_pm">Project Manager</label>--}}
 
-                            <select class="form-control select2" multiple="multiple" id="pm">
-                                @foreach($pm as $pm_record)
-                                    <option selected="selected" value="{{$pm_record->id}}">{{$pm_record->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
+{{--                            <select class="form-control select2" multiple="multiple" id="pm">--}}
+{{--                                @foreach($pm as $pm_record)--}}
+{{--                                    <option selected="selected" value="{{$pm_record->id}}">{{$pm_record->name}}</option>--}}
+{{--                                @endforeach--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
 
-                        <div class="form-group">
-                            <label for="slct_dev">Developers</label>
+{{--                        <div class="form-group">--}}
+{{--                            <label for="slct_dev">Developers</label>--}}
 
-                            <select class="form-control select2" multiple="multiple" id="dev">
-                                @foreach($devs as $dev_record)
-                                    <option selected="selected" value="{{$dev_record->id}}">{{$dev_record->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
+{{--                            <select class="form-control select2" multiple="multiple" id="dev">--}}
+{{--                                @foreach($devs as $dev_record)--}}
+{{--                                    <option selected="selected" value="{{$dev_record->id}}">{{$dev_record->name}}</option>--}}
+{{--                                @endforeach--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
+                        {!! Form::mySelect('project_manager[]', 'Project Manager', $project_managers, $project_developers, ['class' => 'form-control select2',"multiple"=>"multiple"]) !!}
+                        {!! Form::mySelect('developers[]', 'Developers', $developers, $project_developers, ['class' => 'form-control select2',"multiple"=>"multiple"]) !!}
 
-                        <label></label>
+
                     </div>
                 </div>
 

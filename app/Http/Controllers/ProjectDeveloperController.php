@@ -17,9 +17,18 @@ class ProjectDeveloperController extends Controller
      */
     public function index()
     {
-        $items = ProjectDeveloper::latest('updated_at')->get();
+        $projects = Project::all();
 
-        return view('admin.projectdevelopers.index', compact('items'));
+        $assigned_devs = ProjectDeveloper::whereNull('deleted_at')
+            ->get()
+            ->toArray();
+
+        $developers = Developer::all()->toArray();
+
+        return view('admin.projectdevelopers.index')
+            ->with('projects', $projects)
+            ->with('assigned_devs', $assigned_devs)
+            ->with('developers', $developers);
     }
 
     /**
@@ -72,26 +81,53 @@ class ProjectDeveloperController extends Controller
     public function edit($id)
     {
         // Project details
-        $item = Project::find($id);
+        $item = Project::findOrFail($id);
+        $project_managers = [];
+        $developers = [];
+        $project_developers = [];
 
         //get project managers
         $pm = DB::table('developers')
             ->select(DB::raw('concat(first_name," ",last_name) as name, id'))
             ->where('position', config('variables.role_code')['PM'])
+            ->whereNull('deleted_at')
             ->get()
             ->toArray();
+
+        foreach ($pm as $pm_record) {
+            $project_managers[$pm_record->id] = $pm_record->name;
+        }
 
         // get developers
         $devs = DB::table('developers')
             ->select(DB::raw('concat(first_name," ",last_name) as name, id'))
-            ->where('position', config('variables.role_code')['DEVELOPER'])
+            ->where('position', '!=', config('variables.role_code')['PM'])
+            ->whereNull('deleted_at')
             ->get()
             ->toArray();
 
+        foreach ($devs as $dev_record) {
+            $developers[$dev_record->id] = $dev_record->name;
+        }
+
+        // get assigned developers and project managers
+        $assigned_devs = DB::table('project_developer')
+            ->select('developer_id')
+            ->where('project_id', $id)
+            ->whereNull('deleted_at')
+            ->get()
+            ->toArray();
+
+        foreach ($assigned_devs as $assigned_dev_record) {
+            $project_developers[$assigned_dev_record->developer_id] = $assigned_dev_record->developer_id;
+        }
+
+
         return view('admin.projectdevelopers.edit')
             ->with('item', $item)
-            ->with('pm', $pm)
-            ->with('devs', $devs);
+            ->with('project_managers', $project_managers)
+            ->with('developers', $developers)
+            ->with('project_developers', $project_developers);
     }
 
     /**
@@ -103,18 +139,40 @@ class ProjectDeveloperController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $item = ProjectDeveloper::findOrFail($id);
+        // check if project is existing
+        $item = Project::findOrFail($id);
 
-        $this->validate($request, ProjectDeveloper::rules(true, $id));
+        // get project managers
+        $project_managers = $request->project_manager;
 
-        $item->update([
-            'project_id' => $request->project_id,
-            'developer_id' => $request->developer_id,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-        ]);
+        // get developers
+        $developers = $request->developers;
 
-        return redirect()->route(ADMIN . '.projectdevelopers.index')->withSuccess(trans('app.success_update'));
+        // delete all assigned developers
+        ProjectDeveloper::where('project_id', $item->id)->delete();
+
+        // create new records
+        foreach ($project_managers as $pm) {
+            ProjectDeveloper::create([
+                'project_id' => $item->id,
+                'developer_id' => $pm,
+                'date_start' => now(),
+                'date_end' => $item->estimated_end_date,
+                'role' => config('variables.role_code')['PM'],
+            ]);
+        }
+        foreach ($developers as $dev) {
+            ProjectDeveloper::create([
+                'project_id' => $item->id,
+                'developer_id' => $dev,
+                'date_start' => now(),
+                'date_end' => $item->estimated_end_date,
+                'role' => config('variables.role_code')['DEVELOPER'],
+            ]);
+        }
+
+//        return redirect()->route(ADMIN . '.projectdevelopers.edit')->withSuccess(trans('app.success_update'));
+        return back()->withSuccess(trans('app.success_update'));
     }
 
     /**

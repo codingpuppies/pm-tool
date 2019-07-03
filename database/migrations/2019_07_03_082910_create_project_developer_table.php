@@ -19,6 +19,7 @@ class CreateProjectDeveloperTable extends Migration
             $table->integer('developer_id');
             $table->string('date_start');
             $table->string('date_end');
+            $table->string('role');
             $table->timestamps();
             $table->softDeletes();
         });

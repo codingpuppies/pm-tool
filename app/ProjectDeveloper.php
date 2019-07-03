@@ -12,7 +12,7 @@ class ProjectDeveloper extends Model
     protected $table = 'project_developer';
 
     protected $fillable = [
-        'project_id', 'developer_id', 'date_start', 'date_end'
+        'project_id', 'developer_id', 'date_start', 'date_end','role'
     ];
 
     /*
