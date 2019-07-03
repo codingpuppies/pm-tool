@@ -106,6 +106,7 @@
     <script>
         function submitForm() {
             const form = document.getElementById("frm_fixed_costs");
+            form.action="/admin/fixedcosts";
             form.submit();
         }
     </script>
