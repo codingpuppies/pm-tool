@@ -44,9 +44,9 @@
                     <div class="form-group">
                         <label for="year">Amount</label>
                         @if(!isset($item->amount))
-                            <input type="number" class="form-control" name="particular" value="0">
+                            <input type="number" class="form-control" name="amount" value="0">
                         @else
-                            <input type="number" class="form-control" name="particular" value="{{$item->amount}}">
+                            <input type="number" class="form-control" name="amount" value="{{$item->amount}}">
                         @endif
                     </div>
                 </div>
