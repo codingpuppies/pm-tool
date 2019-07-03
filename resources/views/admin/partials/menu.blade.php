@@ -41,7 +41,32 @@
         <span class="title">Developers</span>
     </a>
 </li>
+<hr>
 
+<li class="nav-item">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.developers') ? 'active' : '' }}" href="{{ route(ADMIN . '.developers.index') }}">
+        <span class="icon-holder">
+            <i class="c-amber-500 fa fa-money"></i>
+        </span>
+        <span class="title">Fixed Costs</span>
+    </a>
+</li>
+<li class="nav-item">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.developers') ? 'active' : '' }}" href="{{ route(ADMIN . '.developers.index') }}">
+        <span class="icon-holder">
+            <i class="c-indigo-500 ti-pulse"></i>
+        </span>
+        <span class="title">Variable Costs</span>
+    </a>
+</li><li class="nav-item">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.developers') ? 'active' : '' }}" href="{{ route(ADMIN . '.developers.index') }}">
+        <span class="icon-holder">
+            <i class="c-yellow-900 ti-face-smile"></i>
+        </span>
+        <span class="title">Others</span>
+    </a>
+</li>
+<hr>
 <li class="nav-item">
     <a class="sidebar-link {{ starts_with($route, ADMIN . '.users') ? 'active' : '' }}" href="{{ route(ADMIN . '.users.index') }}">
         <span class="icon-holder">
@@ -50,4 +75,5 @@
         <span class="title">Users</span>
     </a>
 </li>
+<hr>
 
