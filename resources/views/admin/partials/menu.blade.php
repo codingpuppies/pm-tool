@@ -75,5 +75,4 @@
         <span class="title">Users</span>
     </a>
 </li>
-<hr>
 

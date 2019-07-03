@@ -15,6 +15,11 @@ class CreateFixedCostsTable extends Migration
     {
         Schema::create('fixed_costs', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('month');
+            $table->string('year');
+            $table->string('particular');
+            $table->string('amount');
+            $table->string('amount');
             $table->timestamps();
         });
     }
