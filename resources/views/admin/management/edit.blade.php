@@ -1,18 +1,18 @@
 @extends('admin.default')
 
 @section('page-header')
-	Projects <small>{{ trans('app.update_item') }}</small>
+	Manager <small>{{ trans('app.update_item') }}</small>
 @stop
 
 @section('content')
-	{!! Form::model([], [
-			'action' => ['ProjectController@update', $item->id],
+	{!! Form::model($item, [
+			'action' => ['DeveloperController@update', $item->id],
 			'method' => 'put', 
 			'files' => true
 		])
 	!!}
 
-		@include('admin.projects.form')
+		@include('admin.management.form')
 
 		<button type="submit" class="btn btn-primary">{{ trans('app.edit_button') }}</button>
 		

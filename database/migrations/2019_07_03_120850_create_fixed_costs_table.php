@@ -19,8 +19,9 @@ class CreateFixedCostsTable extends Migration
             $table->string('year');
             $table->string('particular');
             $table->string('amount');
-            $table->string('amount');
+            $table->integer('is_regular');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

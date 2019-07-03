@@ -41,10 +41,18 @@
         <span class="title">Developers</span>
     </a>
 </li>
+<li class="nav-item">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.management') ? 'active' : '' }}" href="{{ route(ADMIN . '.management.index') }}">
+        <span class="icon-holder">
+            <i class="c-amber-700 ti-crown"></i>
+        </span>
+        <span class="title">Management</span>
+    </a>
+</li>
 <hr>
 
 <li class="nav-item">
-    <a class="sidebar-link {{ starts_with($route, ADMIN . '.developers') ? 'active' : '' }}" href="{{ route(ADMIN . '.developers.index') }}">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.fixedcosts') ? 'active' : '' }}" href="{{ route(ADMIN . '.fixedcosts.index') }}">
         <span class="icon-holder">
             <i class="c-amber-500 fa fa-money"></i>
         </span>
@@ -52,14 +60,14 @@
     </a>
 </li>
 <li class="nav-item">
-    <a class="sidebar-link {{ starts_with($route, ADMIN . '.developers') ? 'active' : '' }}" href="{{ route(ADMIN . '.developers.index') }}">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.variablecost') ? 'active' : '' }}" href="{{ route(ADMIN . '.variablecost.index') }}">
         <span class="icon-holder">
             <i class="c-indigo-500 ti-pulse"></i>
         </span>
         <span class="title">Variable Costs</span>
     </a>
 </li><li class="nav-item">
-    <a class="sidebar-link {{ starts_with($route, ADMIN . '.developers') ? 'active' : '' }}" href="{{ route(ADMIN . '.developers.index') }}">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.others') ? 'active' : '' }}" href="{{ route(ADMIN . '.others.index') }}">
         <span class="icon-holder">
             <i class="c-yellow-900 ti-face-smile"></i>
         </span>

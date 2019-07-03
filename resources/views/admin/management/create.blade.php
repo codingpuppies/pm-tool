@@ -1,17 +1,17 @@
 @extends('admin.default')
 
 @section('page-header')
-	Fixed Costs Particular <small>{{ trans('app.add_new_item') }}</small>
+	Manager <small>{{ trans('app.add_new_item') }}</small>
 @stop
 
 @section('content')
 	{!! Form::open([
-			'action' => ['FixedCostController@store'],
+			'action' => ['DeveloperController@store'],
 			'files' => true
 		])
 	!!}
 
-		@include('admin.fixedcosts.form')
+		@include('admin.management.form')
 
 		<button type="submit" class="btn btn-primary">{{ trans('app.add_button') }}</button>
 		

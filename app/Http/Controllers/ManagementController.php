@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Developer;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
-class DeveloperController extends Controller
+class ManagementController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,10 +15,11 @@ class DeveloperController extends Controller
      */
     public function index()
     {
-        $items = Developer::where('department','!=',config('variables.role_code')['MGT'])
-            ->latest('updated_at')->get();
+        $items = Developer::where('department', config('variables.role_code')['MGT'])
+            ->latest('updated_at')
+            ->get();
 
-        return view('admin.developers.index', compact('items'));
+        return view('admin.management.index', compact('items'));
     }
 
     /**
@@ -29,7 +29,7 @@ class DeveloperController extends Controller
      */
     public function create()
     {
-        return view('admin.developers.create');
+        return view('admin.management.create');
     }
 
     /**
@@ -87,7 +87,7 @@ class DeveloperController extends Controller
     {
         $item = Developer::findOrFail($id);
 
-        return view('admin.developers.edit', compact('item'));
+        return view('admin.management.edit', compact('item'));
     }
 
     /**
@@ -124,7 +124,7 @@ class DeveloperController extends Controller
             'status' => 1,
         ]);
 
-        return redirect()->route(ADMIN . '.developers.index')->withSuccess(trans('app.success_update'));
+        return redirect()->route(ADMIN . '.management.index')->withSuccess(trans('app.success_update'));
     }
 
     /**

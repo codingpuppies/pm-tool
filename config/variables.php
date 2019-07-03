@@ -11,6 +11,7 @@ return [
         '0' => 'Developer',
         '1' => 'Quality Assurance',
         '2' => 'Project Manager',
+        '3' => 'Management',
         '10' => 'Admin',
     ],
 
@@ -18,6 +19,7 @@ return [
         'DEVELOPER' => 0,
         'QA' => 1,
         'PM' => 2,
+        'MGT' => 3,
         'ADMIN' => 10,
     ],
 
@@ -25,11 +27,24 @@ return [
         '0' => 'Developer',
         '1' => 'Quality Assurance',
         '2' => 'Project Manager',
+        '3' => 'Manager',
     ],
+
+    'mgt_position' => [
+        '3' => 'Manager',
+        '4' => 'VP',
+        '5' => 'CEO',
+        '6' => 'PRESIDENT',
+    ],
+
     'department' => [
         '0' => 'PHP',
         '1' => 'Python',
         '2' => 'Project Management',
+        '3' => 'Management',
+    ],
+    'mgt_department' => [
+        '3' => 'Management',
     ],
     
     'status' => [
@@ -56,6 +71,19 @@ return [
         '2' => 'ON-HOLD',
         '3' => 'CANCELLED',
         '4' => 'COMPLETED',
+    ],
+
+    'particulars' => [
+        'SALARY' => 'SALARY',
+        'RENT' => 'RENT',
+        'INTERNET BILL' => 'INTERNET BILL',
+        'PHONE BILL' => 'PHONE BILL',
+        'ELECTRIC BILL' => 'ELECTRIC BILL',
+        'WATER BILL' => 'WATER BILL',
+        'FOOD' => 'FOOD',
+        'TRAVEL EXPENSES' => 'TRAVEL EXPENSES',
+        'MAINTENANCE' => 'MAINTENANCE',
+        'OTHERS' => 'OTHERS',
     ],
 
     /*

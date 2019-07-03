@@ -1,42 +1,84 @@
 @extends('admin.default')
 
 @section('page-header')
-    Projects
+    Fixed Costs
     <small>{{ trans('app.manage') }}</small>
 @endsection
 
 @section('content')
 
     <div class="mB-20">
-        <a href="{{ route(ADMIN . '.projects.create') }}" class="btn btn-info">
-            {{ trans('app.add_button') }}
-        </a>
+
+
+        @if(count($items)==0)
+            <form action="{{ route(ADMIN . '.fixedcosts.create') }}" method="GET" id="frm_fixed_costs">
+                <button class="btn btn-info">
+                    {{ trans('app.add_button') }}
+                </button>
+                @else
+                    <form action="{{ route(ADMIN . '.fixedcosts.edit',1) }}" method="GET" id="frm_fixed_costs">
+                        <button class="btn btn-info">
+                            {{ trans('app.edit_button') }}
+                        </button>
+                        @endif
+
+                        <select class="form-control pull-right col-md-1" name="year" id="year" onchange="submitForm();">
+                            @for($year=2019;$year<2025;$year++)
+                                <option value="{{$year}}" @if(date('Y')==$year) selected @endif>{{$year}}</option>
+                            @endfor
+                        </select>
+                        <select class="form-control pull-right col-md-2" name="month" id="month"
+                                onchange="submitForm();">
+                            @for($month=0;$month<12;$month++)
+                                <option value="{{$month}}"
+                                        @if(date('m')==$month) selected @endif>{{date_format(date_create("2019-".$month."-01"),"F")}}</option>
+                            @endfor
+                        </select>
+                    </form>
     </div>
 
+    <div class="bgc-white bd bdrs-3 p-20 mB-20">
+
+        <table class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>Month Year</th>
+                <th>Total Fixed Cost Expenses</th>
+            </tr>
+            </thead>
+
+            <tfoot>
+            <tr>
+                <th>Month Year</th>
+                <th>Total Fixed Cost Expenses</th>
+            </tr>
+            </tfoot>
+
+            <tbody>
+            <tr>
+            <td>month</td>
+
+            <td>{{$total_expenses}}</td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
 
     <div class="bgc-white bd bdrs-3 p-20 mB-20">
         <table id="dataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
             <tr>
-                <th>Project Name</th>
-                <th>Description</th>
-                <th>TCP</th>
-                <th>Duration</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
+                <th>Particular</th>
+                <th>Amount</th>
                 <th>Action</th>
             </tr>
             </thead>
 
             <tfoot>
             <tr>
-                <th>Description</th>
-                <th>TCP</th>
-                <th>Duration</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
+                <th>Particular</th>
+                <th>Amount</th>
                 <th>Action</th>
             </tr>
             </tfoot>
@@ -44,27 +86,14 @@
             <tbody>
             @foreach ($items as $item)
                 <tr>
-                    <td><a href="{{ route(ADMIN . '.users.edit', $item->id) }}">{{ $item->project_name }}</a></td>
-                    <td>{{ $item->description }}</td>
-                    <td>{{ $item->tcp }}</td>
-                    <td>{{ compute_month_diff($item->estimated_start_date,$item->estimated_end_date)}} months</td>
-                    <td>{{ $item->estimated_start_date }}</td>
-                    <td>{{ $item->estimated_end_date }}</td>
-                    <td>
-                        <span class="badge badge-pill badge-success lh-0 p-10">
-                            {{ config('variables.project_status')[$item->status] }}
-                        </span>
-                    </td>
+                    <td>{{ $item->particular }}</td>
+
+                    <td>{{ $item->amount }}</td>
+
                     <td>
                         <ul class="list-inline">
                             <li class="list-inline-item">
-                                <a href="{{ route(ADMIN . '.projectdevelopers.edit', $item->id) }}"
-                                   title="Manage Project Developers" class="btn btn-success btn-sm"><span
-                                            class="fa fa-users"></span>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="{{ route(ADMIN . '.projects.edit', $item->id) }}"
+                                <a href="{{ route(ADMIN . '.fixedcosts.edit', $item->id) }}"
                                    title="{{ trans('app.edit_title') }}" class="btn btn-primary btn-sm"><span
                                             class="ti-pencil"></span>
                                 </a>
@@ -90,5 +119,12 @@
 
         </table>
     </div>
+
+    <script>
+        function submitForm() {
+            const form = document.getElementById("frm_fixed_costs");
+            form.submit();
+        }
+    </script>
 
 @endsection
