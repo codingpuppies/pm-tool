@@ -144,32 +144,7 @@ class FixedCostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $item = Developer::findOrFail($id);
-
-        $user = User::findOrFail($item->user_id);
-
-        $this->validate($request, Developer::rules(true, $id));
-        $this->validate($request, User::rules(true, $user->id));
-
-        $user->update([
-            'name' => $request->first_name . ' ' . $request->last_name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
-
-        $item->update([
-            'salary' => $request->salary,
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'position' => $request->position,
-            'department' => $request->department,
-            'employee_number' => $request->employee_number,
-            'status' => 1,
-        ]);
-
-        return redirect()->route(ADMIN . '.developers.index')->withSuccess(trans('app.success_update'));
+        /**/
     }
 
     /**

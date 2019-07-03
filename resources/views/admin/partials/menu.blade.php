@@ -67,7 +67,7 @@
         <span class="title">Variable Costs</span>
     </a>
 </li><li class="nav-item">
-    <a class="sidebar-link {{ starts_with($route, ADMIN . '.others') ? 'active' : '' }}" href="{{ route(ADMIN . '.others.index') }}">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.othercosts') ? 'active' : '' }}" href="{{ route(ADMIN . '.othercosts.index') }}">
         <span class="icon-holder">
             <i class="c-yellow-900 ti-face-smile"></i>
         </span>

@@ -1,7 +1,7 @@
 @extends('admin.default')
 
 @section('page-header')
-    Fixed Costs
+    Other Costs
     <small>{{ trans('app.manage') }}</small>
 @endsection
 
@@ -9,7 +9,7 @@
 
     <div class="mB-20">
 
-        <form action="{{ route(ADMIN . '.fixedcosts.create') }}" method="GET" id="frm_fixed_costs">
+        <form action="{{ route(ADMIN . '.othercosts.create') }}" method="GET" id="frm_fixed_costs">
             <div class="row">
                 <div class="col-md-8">
                     @if(count($items)==0)
@@ -52,7 +52,7 @@
         <div class="layer w-100">
             <div class="peers ai-sb fxw-nw">
                 <div class="peer peer-greed">
-                    <h6 class="lh-1">Total Fixed Cost for {{date_format(date_create("2019-".$_month."-01"),"F")}} {{$_year}}</h6>
+                    <h6 class="lh-1">Total Other Cost for {{date_format(date_create("2019-".$_month."-01"),"F")}} {{$_year}}</h6>
                 </div>
                 <div class="peer">
                     <h6>{{getAmountAttribute($total_expenses)}}</h6>
@@ -67,6 +67,7 @@
             <tr>
                 <th>Particular</th>
                 <th>Amount</th>
+                <th>Action</th>
             </tr>
             </thead>
 
@@ -74,6 +75,7 @@
             <tr>
                 <th>Particular</th>
                 <th>Amount</th>
+                <th>Action</th>
             </tr>
             </tfoot>
 
@@ -83,6 +85,24 @@
                     <td>{{ $item->particular }}</td>
 
                     <td>{{ getAmountAttribute($item->amount) }}</td>
+                    <td>
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <a href="{{ route(ADMIN . '.othercosts.edit', $item->id) }}" title="{{ trans('app.edit_title') }}" class="btn btn-primary btn-sm"><span class="ti-pencil"></span></a></li>
+                            <li class="list-inline-item">
+                                {!! Form::open([
+                                    'class'=>'delete',
+                                    'url'  => route(ADMIN . '.othercosts.destroy', $item->id),
+                                    'method' => 'DELETE',
+                                    ])
+                                !!}
+
+                                <button class="btn btn-danger btn-sm" title="{{ trans('app.delete_title') }}"><i class="ti-trash"></i></button>
+
+                                {!! Form::close() !!}
+                            </li>
+                        </ul>
+                    </td>
 
                 </tr>
             @endforeach
@@ -94,7 +114,7 @@
         <div class="layer w-100">
             <div class="peers ai-sb fxw-nw">
                 <div class="peer peer-greed">
-                    <h6 class="lh-1">Total Fixed Cost for {{date_format(date_create("2019-".$_month."-01"),"F")}} {{$_year}}</h6>
+                    <h6 class="lh-1">Total Other Cost for {{date_format(date_create("2019-".$_month."-01"),"F")}} {{$_year}}</h6>
                 </div>
                 <div class="peer">
                     <h6>{{getAmountAttribute($total_expenses)}}</h6>
@@ -106,7 +126,7 @@
     <script>
         function submitForm() {
             const form = document.getElementById("frm_fixed_costs");
-            form.action="/admin/fixedcosts";
+            form.action="/admin/othercosts";
             form.submit();
         }
     </script>
