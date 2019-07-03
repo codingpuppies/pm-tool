@@ -1,17 +1,17 @@
 @extends('admin.default')
 
 @section('page-header')
-	Project <small>{{ trans('app.add_new_item') }}</small>
+	Variable Costs Estimate <small>{{ trans('app.add_new_item') }}</small>
 @stop
 
 @section('content')
 	{!! Form::open([
-			'action' => ['ProjectController@store'],
+			'action' => ['VariableCostController@store'],
 			'files' => true
 		])
 	!!}
 
-		@include('admin.projects.form')
+		@include('admin.othercosts.form')
 
 		<button type="submit" class="btn btn-primary">{{ trans('app.add_button') }}</button>
 		

@@ -60,7 +60,7 @@
     </a>
 </li>
 <li class="nav-item">
-    <a class="sidebar-link {{ starts_with($route, ADMIN . '.variablecost') ? 'active' : '' }}" href="{{ route(ADMIN . '.variablecost.index') }}">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.variablecosts') ? 'active' : '' }}" href="{{ route(ADMIN . '.variablecosts.index') }}">
         <span class="icon-holder">
             <i class="c-indigo-500 ti-pulse"></i>
         </span>
@@ -72,6 +72,15 @@
             <i class="c-yellow-900 ti-face-smile"></i>
         </span>
         <span class="title">Others</span>
+    </a>
+</li>
+<hr>
+<li class="nav-item">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.users') ? 'active' : '' }}" href="{{ route(ADMIN . '.users.index') }}">
+        <span class="icon-holder">
+            <i class="c-blue-grey-600 ti-notepad"></i>
+        </span>
+        <span class="title">Reports</span>
     </a>
 </li>
 <hr>

@@ -16,7 +16,7 @@ Route::group(['prefix' => ADMIN, 'as' => ADMIN . '.', 'middleware'=>['auth', 'Ro
     Route::resource('management', 'ManagementController');
     Route::resource('projectdevelopers', 'ProjectDeveloperController');
     Route::resource('fixedcosts', 'FixedCostController');
-    Route::resource('variablecost', 'FixedCostController');
+    Route::resource('variablecosts', 'VariableCostController');
     Route::resource('othercosts', 'OtherCostController');
 });
 
