@@ -49,27 +49,12 @@ function compute_month_diff($date1, $date2)
 
     $interval = $d2->diff($d1);
     $total = $interval->m + ($interval->y * 12);
-    return $total == 0 ? $interval->d.' days' : $total.' months';
-//   /* $year = $interval / 12;
-//    $month = $interval % 12;
-//
-//    if ($interval > 12) {
-//       if($year > 1){
-//           $duration .= $year.' years';
-//       }else{
-//           $duration .= $year.' year';
-//       }
-//    }
-//
-//    if(($year != 0) && ($month > 1)){
-//        $duration .= ' and ';
-//    }
-//
-//    if($month > 1){
-//        $duration .= $month.' months';
-//    }else{
-//        $duration .= $month.' month';
-//    }
-//
-//    return $duration;*/
+
+    $result = $total == 0 ? $interval->d . ' days' : $total . ' months';
+    return $result;
+}
+
+function getAmountAttribute($value)
+{
+    return number_format($value,2);
 }

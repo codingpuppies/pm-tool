@@ -22,7 +22,7 @@ class FixedCostController extends Controller
 
         $items = FixedCost::where('month', $month)
             ->where('year', $year)
-            ->latest('updated_at')
+            ->orderBy('amount',"desc")
             ->get();
 
         $total_expenses = FixedCost::select(DB::raw('sum(amount) as amount'))
@@ -34,9 +34,12 @@ class FixedCostController extends Controller
         if(!$total_expenses)
             $total_expenses[0]['amount'] = 0;
 
+
         return view('admin.fixedcosts.index')
             ->with('items',$items)
-            ->with('total_expenses',$total_expenses[0]['amount']);
+            ->with('total_expenses',$total_expenses[0]['amount'])
+            ->with('_month',$month)
+            ->with('_year',$year);
     }
 
     /**
