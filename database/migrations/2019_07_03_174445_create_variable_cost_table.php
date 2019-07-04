@@ -20,6 +20,8 @@ class CreateVariableCostTable extends Migration
             $table->integer('estimate_effort')->default(0);
             $table->integer('actual_effort')->default(0);
             $table->string('date');
+            $table->string('month')->nullable();
+            $table->string('year')->nullable();
             $table->integer('mode')->nullable();
             $table->timestamps();
             $table->softDeletes();

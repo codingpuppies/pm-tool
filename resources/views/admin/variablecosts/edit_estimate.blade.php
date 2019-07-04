@@ -1,7 +1,7 @@
 @extends('admin.default')
 
 @section('page-header')
-    Variable Costs
+    Variable Costs - Estimates Update
     <small>{{ trans('app.manage') }}</small>
 @endsection
 
@@ -13,13 +13,10 @@
             <div class="row">
                 <div class="col-md-8">
 
-                    <button class="btn btn-info" id="btn-estimate">
-                        Estimate
+                    <button class="btn btn-info">
+                        Update
                     </button>
 
-                    <button class="btn btn-success"  id="btn-actual">
-                        Actual
-                    </button>
 
                 </div>
                 <div class="col-md-2  pull-right">
@@ -50,14 +47,15 @@
 
 
     <div class="bgc-white bd bdrs-3 p-20 mB-20 mT-20">
-        <table class="table table-hover table-striped mB-0" cellspacing="0" width="100%">
+        <table class="table table-striped mB-0" cellspacing="0" width="100%">
             <thead>
             <tr>
                 <th class="text-center align-middle" style="background-color:{{config('variables.developer_column')}}">Developers</th>
 
-                @foreach($projects as $project)
 
-                    <td style="padding:0!important ;">
+            @foreach($projects as $project)
+
+                    <td style="padding:0!important; width:10%">
                         <table class="table text-center"
                                style="height:100%; border:0 !important;margin-bottom:0!important;">
                             <tr>
@@ -69,9 +67,6 @@
                             <tr>
                                 <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
                                     <h6>EST</h6>
-                                </td>
-                                <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][1] }}">
-                                    <h6>ACT</h6>
                                 </td>
                             </tr>
                         </table>
@@ -90,65 +85,48 @@
                             <td style="width:50%;margin:0!important;background-color:#f3e5f5">
                                 <h6>EST</h6>
                             </td>
-                            <td style="width:50%;margin:0!important;background-color:#ce93d8">
-                                <h6>ACT</h6>
-                            </td>
                         </tr>
                     </table>
                 </td>
+                <th class="text-center align-middle" style="background-color:{{config('variables.action_column')}}">Action</th>
+
             </tr>
             </thead>
 
             <tbody>
             @foreach ($developers as $item)
                 <tr>
-                    <td>{{ $item->first_name }} {{ $item->last_name }}</td>
-                    @foreach($projects as $project)
-                        <td style="padding:0!important ;">
+                    <form>
+                        <td>{{ $item->first_name }} {{ $item->last_name }}</td>
+                        @foreach($projects as $project)
+                            <td style="padding:0!important ;">
+                                <table class="table text-center"
+                                       style="height:100%; border:0 !important;margin-bottom:0!important;">
+                                    <tr>
+                                        <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+                                            <input placeholder="0" type="number" class="form-control"
+                                                   value="@if(isset($assigned_developers[$item->id][$project->id])){{trim($assigned_developers[$item->id][$project->id]->estimate_effort)}}@endif">
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </td>
+
+                        @endforeach
+                        <td style="padding:0!important; background-color:#f3e5f5;">
                             <table class="table text-center"
-                                   style="height:100%; border:0 !important;margin-bottom:0!important;">
+                                   style="height:100% !important; border:0 !important;margin-bottom:0!important;">
                                 <tr>
-                                    <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+                                    <td style="height:100% !important; width:50%;margin:0!important;background-color:#f3e5f5">
                                         <h6>
-                                            @if(isset($assigned_developers[$item->id][$project->id]))
-                                                {{$assigned_developers[$item->id][$project->id]->estimate_effort}}%
-                                            @else
-                                                0%
-                                            @endif
+                                            <b>{{$total_developer_estimated[$item->id]}}%</b>
                                         </h6>
                                     </td>
-                                    <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][1] }}">
-                                        <h6>
-                                            @if(isset($assigned_developers[$item->id][$project->id]))
-                                                {{$assigned_developers[$item->id][$project->id]->actual_effort}}%
-                                            @else
-                                                0%
-                                            @endif
-                                        </h6>
-                                    </td>
+
                                 </tr>
                             </table>
                         </td>
-
-                    @endforeach
-                    <td style="padding:0!important ;">
-                        <table class="table text-center"
-                               style="height:100%; border:0 !important;margin-bottom:0!important;">
-
-                            <tr>
-                                <td style="width:50%;margin:0!important;background-color:#f3e5f5">
-                                    <h6>
-                                        <b>{{$total_developer_estimated[$item->id]}}%</b>
-                                    </h6>
-                                </td>
-                                <td style="width:50%;margin:0!important;background-color:#ce93d8">
-                                    <h6>
-                                        <b>{{$total_developer_actual[$item->id]}}%</b>
-                                    </h6>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
+                    </form>
                 </tr>
             @endforeach
             <tr>
@@ -167,15 +145,7 @@
                                         @endif
                                     </h6>
                                 </td>
-                                <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][1] }}">
-                                    <h6>
-                                        @if(isset($assigned_developers[$item->id][$project->id]))
-                                            <b>{{$assigned_developers[$item->id][$project->id]->actual_effort}}%</b>
-                                        @else
-                                            <b>0%</b>
-                                        @endif
-                                    </h6>
-                                </td>
+
                             </tr>
                         </table>
                     </td>
@@ -191,11 +161,7 @@
                                     <b>{{$total_developer_estimated[$item->id]}}%</b>
                                 </h6>
                             </td>
-                            <td style="width:50%;margin:0!important;background-color:#ce93d8">
-                                <h6>
-                                    <b>{{$total_developer_actual[$item->id]}}%</b>
-                                </h6>
-                            </td>
+
                         </tr>
                     </table>
                 </td>

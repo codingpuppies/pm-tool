@@ -65,6 +65,10 @@ return [
         'YEAR' => 12,
     ],
 
+    'developer_column' => '#a5d6a7',
+    'action_column' => '#fff59d',
+
+
     'project_status' => [
         '0' => 'INACTIVE',
         '1' => 'ACTIVE',
@@ -92,6 +96,7 @@ return [
         '1' => '#3f51b5',
         '2' => '#ff9800',
         '3' => '#4caf50',
+        '4' => '#ffeb3b',
     ],
     'table_est_act' => [
         '0' => [
@@ -109,6 +114,10 @@ return [
         '3' => [
             '0' => '#e8f5e9',
             '1' => '#c8e6c9'
+        ],
+        '4' => [
+            '0' => '#fffde7',
+            '1' => '#fff59d'
         ],
     ],
 

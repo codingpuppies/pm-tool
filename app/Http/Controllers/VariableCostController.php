@@ -16,28 +16,65 @@ class VariableCostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request )
     {
+        // get data for specific month and year, default is current month and year
         $month = isset($request->month) ? $request->month : (int)date('m');
         $year = isset($request->year) ? $request->year : (int)date('Y');
 
         $items = VariableCost::where('month', $month)
             ->where('year', $year)
-            ->orderBy('amount', "desc")
             ->get();
 
+        // get projects
         $projects = Project::all();
-        $developers = Developer::where('department','!=',config('variables.role_code')['MGT'])
-            ->orderBy('position', "desc")->get();
 
+        // get developer lists
+        $developers = Developer::where('department', '!=', config('variables.role_code')['MGT'])
+            ->orderBy('position', "desc")
+            ->get();
 
+        // project assigned developers
+        $projectdevelopers = ProjectDeveloper::all();
 
-        return view('admin.variablecosts.index')
+        // check if developer is assigned
+        foreach($projectdevelopers as $projectdeveloper){
+            
+        }
+
+        // get estimates per month
+        $variable_cost = VariableCost::where('month', $month)
+            ->where('year', $year)
+            ->whereNull('deleted_at')
+            ->get();
+
+        // set containers
+        $assigned_developers = [];
+        $total_developer_estimated = [];
+        $total_developer_actual = [];
+
+        // initialize effort
+        foreach($developers as $developer){
+            $total_developer_estimated[$developer->id] = 0;
+            $total_developer_actual[$developer->id] = 0;
+        }
+
+        // comput for each effort
+        foreach ($variable_cost as $cost) {
+            $assigned_developers[$cost->developer_id][$cost->project_id] = $cost;
+            $total_developer_estimated[$cost->developer_id] += $cost->estimate_effort;
+            $total_developer_actual[$cost->developer_id] += $cost->actual_effort;
+        }
+
+        return view('admin.variablecosts.edit_estimate')
             ->with('items', $items)
             ->with('projects', $projects)
             ->with('developers', $developers)
-//            ->with('assigned_developers', $assigned_developers)
-//            ->with('variable_cost', $variable_cost)
+            ->with('projectdevelopers', $projectdevelopers)
+            ->with('assigned_developers', $assigned_developers)
+            ->with('total_developer_estimated', $total_developer_estimated)
+            ->with('total_developer_actual', $total_developer_actual)
+            ->with('variable_cost', $variable_cost)
             ->with('_month', $month)
             ->with('_year', $year);
     }
