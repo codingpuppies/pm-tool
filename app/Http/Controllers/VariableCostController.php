@@ -27,15 +27,17 @@ class VariableCostController extends Controller
             ->get();
 
         $projects = Project::all();
-        $developers = Developer::all();
-        $assigned_developers = ProjectDeveloper::all();
+        $developers = Developer::where('department','!=',config('variables.role_code')['MGT'])
+            ->orderBy('position', "desc")->get();
+
 
 
         return view('admin.variablecosts.index')
             ->with('items', $items)
             ->with('projects', $projects)
             ->with('developers', $developers)
-            ->with('assigned_developers', $assigned_developers)
+//            ->with('assigned_developers', $assigned_developers)
+//            ->with('variable_cost', $variable_cost)
             ->with('_month', $month)
             ->with('_year', $year);
     }
@@ -103,10 +105,10 @@ class VariableCostController extends Controller
     public function edit($id, Request $request)
     {
         $item = VariableCost::find($id);
-        if($item){
+        if ($item) {
             $month = $item->month;
             $year = $item->year;
-        }else{
+        } else {
             $month = isset($request->month) ? $request->month : (int)date('m');
             $year = isset($request->year) ? $request->year : (int)date('Y');
         }

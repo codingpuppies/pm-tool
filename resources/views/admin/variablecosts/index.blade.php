@@ -50,66 +50,35 @@
 
 
     <div class="bgc-white bd bdrs-3 p-20 mB-20 mT-20">
-        <table class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <table class="table table-striped table-bordered mB-0" cellspacing="0" width="100%">
             <thead>
             <tr>
-                <th></th>
+                <th>Developers</th>
                 @foreach($projects as $project)
-                <th style="padding:0!important;">
-                    <table class="table table-borderless text-center">
+                <th style="padding:0!important ;">
+                    <table class="table text-center" style="margin-bottom:0!important;">
                         <tr>
-                            <td colspan="2" class="c-indigo-500" style="background-color:lightblue;">{{$project->project_name}}</td>
+                            <td colspan="2" class="c-white"
+                                style="background-color:{{ config('variables.table_column')[$project->id%4]  }};">
+                                {{$project->project_name}}
+                            </td>
                         </tr>
                         <tr>
-                            <td style="padding:0!important;"><small>ESTIMATE</small></td>
-                            <td style="padding:0!important;"><small>ACTUAL</small></td>
+                            <td style="padding:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}"><h6>EST</h6></td>
+                            <td style="padding:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][1] }}"><h6>ACT</h6></td>
                         </tr>
                     </table>
                 </th>
                 @endforeach
                 <th>Action</th>
             </tr>
-            <tr>
-                <th>Developer</th>
-            </tr>
             </thead>
 
-            <tfoot>
-            <tr>
-                <th>Particular</th>
-                <th>Amount</th>
-                <th>Action</th>
-            </tr>
-            </tfoot>
 
             <tbody>
-            @foreach ($items as $item)
+            @foreach ($developers as $item)
                 <tr>
-                    <td>{{ $item->particular }}</td>
-
-                    <td>{{ getAmountAttribute($item->amount) }}</td>
-                    <td>
-                        <ul class="list-inline">
-                            <li class="list-inline-item">
-                                <a href="{{ route(ADMIN . '.othercosts.edit', $item->id) }}"
-                                   title="{{ trans('app.edit_title') }}" class="btn btn-primary btn-sm"><span
-                                            class="ti-pencil"></span></a></li>
-                            <li class="list-inline-item">
-                                {!! Form::open([
-                                    'class'=>'delete',
-                                    'url'  => route(ADMIN . '.othercosts.destroy', $item->id),
-                                    'method' => 'DELETE',
-                                    ])
-                                !!}
-
-                                <button class="btn btn-danger btn-sm" title="{{ trans('app.delete_title') }}"><i
-                                            class="ti-trash"></i></button>
-
-                                {!! Form::close() !!}
-                            </li>
-                        </ul>
-                    </td>
-
+                    <td>{{ $item->first_name }} {{ $item->last_name }}</td>
                 </tr>
             @endforeach
             </tbody>
