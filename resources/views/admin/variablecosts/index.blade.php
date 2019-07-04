@@ -108,24 +108,41 @@
                             <table class="table text-center"
                                    style="height:100%; border:0 !important;margin-bottom:0!important;">
                                 <tr>
-                                    <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
-                                        <h6>
-                                            @if(isset($assigned_developers[$item->id][$project->id]))
-                                                {{$assigned_developers[$item->id][$project->id]->estimate_effort}}%
-                                            @else
-                                                0%
-                                            @endif
-                                        </h6>
-                                    </td>
-                                    <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][1] }}">
-                                        <h6>
-                                            @if(isset($assigned_developers[$item->id][$project->id]))
-                                                {{$assigned_developers[$item->id][$project->id]->actual_effort}}%
-                                            @else
-                                                0%
-                                            @endif
-                                        </h6>
-                                    </td>
+                                    @if(isset($assigned_projects[$item->id][$project->id]))
+                                        <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+
+                                            <h6>
+                                                @if(isset($assigned_developers[$item->id][$project->id]))
+                                                    {{$assigned_developers[$item->id][$project->id]->estimate_effort}}%
+                                                @else
+                                                    0%
+                                                @endif
+                                            </h6>
+                                        </td>
+                                        <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][1] }}">
+                                            <h6>
+                                                @if(isset($assigned_developers[$item->id][$project->id]))
+                                                    {{$assigned_developers[$item->id][$project->id]->actual_effort}}%
+                                                @else
+                                                    0%
+                                                @endif
+                                            </h6>
+                                        </td>
+                                    @else
+                                        <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+
+                                            <h6>
+                                                --
+                                            </h6>
+                                        </td>
+                                        <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][1] }}">
+                                            <h6>
+                                                --
+                                            </h6>
+                                        </td>
+
+                                    @endif
+
                                 </tr>
                             </table>
                         </td>

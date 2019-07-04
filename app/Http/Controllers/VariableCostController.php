@@ -37,10 +37,6 @@ class VariableCostController extends Controller
         // project assigned developers
         $projectdevelopers = ProjectDeveloper::all();
 
-        // check if developer is assigned
-        foreach($projectdevelopers as $projectdeveloper){
-            
-        }
 
         // get estimates per month
         $variable_cost = VariableCost::where('month', $month)
@@ -52,11 +48,21 @@ class VariableCostController extends Controller
         $assigned_developers = [];
         $total_developer_estimated = [];
         $total_developer_actual = [];
+        $assigned_projects = [];
 
         // initialize effort
         foreach($developers as $developer){
             $total_developer_estimated[$developer->id] = 0;
             $total_developer_actual[$developer->id] = 0;
+        }
+
+        // check if assigned in project
+        foreach($developers as $developer){
+            foreach($projectdevelopers as $proj_developer){
+                if($proj_developer->developer_id == $developer->id){
+                    $assigned_projects[$developer->id][$proj_developer->project_id] = true;
+                }
+            }
         }
 
         // comput for each effort
@@ -66,12 +72,13 @@ class VariableCostController extends Controller
             $total_developer_actual[$cost->developer_id] += $cost->actual_effort;
         }
 
-        return view('admin.variablecosts.edit_estimate')
+        return view('admin.variablecosts.index')
             ->with('items', $items)
             ->with('projects', $projects)
             ->with('developers', $developers)
             ->with('projectdevelopers', $projectdevelopers)
             ->with('assigned_developers', $assigned_developers)
+            ->with('assigned_projects', $assigned_projects)
             ->with('total_developer_estimated', $total_developer_estimated)
             ->with('total_developer_actual', $total_developer_actual)
             ->with('variable_cost', $variable_cost)
