@@ -72,7 +72,18 @@ class VariableCostController extends Controller
             $total_developer_actual[$cost->developer_id] += $cost->actual_effort;
         }
 
-        return view('admin.variablecosts.index')
+        $url = '';
+        if(isset($request->is_edit)){
+            if($request->is_edit==config('variables.EDIT_ESTIMATE_VARIABLE_COST')){
+                $url = 'admin.variablecosts.edit_estimate';
+            }else{
+                $url = 'admin.variablecosts.edit_actual';
+            }
+        }else{
+            $url = 'admin.variablecosts.index';
+        }
+
+        return view($url)
             ->with('items', $items)
             ->with('projects', $projects)
             ->with('developers', $developers)

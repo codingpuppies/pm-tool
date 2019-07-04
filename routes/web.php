@@ -17,6 +17,8 @@ Route::group(['prefix' => ADMIN, 'as' => ADMIN . '.', 'middleware'=>['auth', 'Ro
     Route::resource('projectdevelopers', 'ProjectDeveloperController');
     Route::resource('fixedcosts', 'FixedCostController');
     Route::resource('variablecosts', 'VariableCostController');
+    Route::get('variablecosts/edit/edit_variable','VariableCostController@index');
+    Route::get('variablecosts/edit/edit_actual','VariableCostController@index');
     Route::resource('othercosts', 'OtherCostController');
 });
 

@@ -67,6 +67,8 @@ return [
 
     'developer_column' => '#a5d6a7',
     'action_column' => '#fff59d',
+    'EDIT_ESTIMATE_VARIABLE_COST' => '1',
+    'EDIT_ACTUAL_VARIABLE_COST' => '2',
 
 
     'project_status' => [

@@ -12,12 +12,12 @@
         <form action="{{ route(ADMIN . '.variablecosts.create') }}" method="GET" id="frm_fixed_costs">
             <div class="row">
                 <div class="col-md-8">
-
-                    <button class="btn btn-info" id="btn-estimate">
+                    <input type="hidden" id="is_edit" name="is_edit" value="0">
+                    <button class="btn btn-info" id="btn-estimate" onclick="edit_estimate()">
                         Estimate
                     </button>
 
-                    <button class="btn btn-success"  id="btn-actual">
+                    <button class="btn btn-success" id="btn-actual" onclick="edit_actual()">
                         Actual
                     </button>
 
@@ -53,7 +53,9 @@
         <table class="table table-hover table-striped mB-0" cellspacing="0" width="100%">
             <thead>
             <tr>
-                <th class="text-center align-middle" style="background-color:{{config('variables.developer_column')}}">Developers</th>
+                <th class="text-center align-middle" style="background-color:{{config('variables.developer_column')}}">
+                    Developers
+                </th>
 
                 @foreach($projects as $project)
 
@@ -226,6 +228,20 @@
         function submitForm() {
             const form = document.getElementById("frm_fixed_costs");
             form.action = "/admin/variablecosts";
+            form.submit();
+        }
+
+        function edit_estimate() {
+            const form = document.getElementById("frm_fixed_costs");
+            form.action = "/admin/variablecosts/edit/edit_variable";
+            document.getElementById("is_edit").value = '{{config('variables.EDIT_ESTIMATE_VARIABLE_COST')}}';
+            form.submit();
+        }
+
+        function edit_actual() {
+            const form = document.getElementById("frm_fixed_costs");
+            form.action = "/admin/variablecosts/edit/edit_actual";
+            document.getElementById("is_edit").value = '{{config('variables.EDIT_ACTUAL_VARIABLE_COST')}}';
             form.submit();
         }
     </script>
