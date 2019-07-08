@@ -118,6 +118,7 @@
                                                        onchange="sumEfforts({{$item->id}},{{$project->id}},this.value)"
                                                        name="efforts[{{$project->id}}][{{$item->id}}][]"
                                                        value="@if(isset($assigned_developers[$item->id][$project->id]) && $assigned_developers[$item->id][$project->id]!=null){{trim($assigned_developers[$item->id][$project->id]->estimate_effort)}}@else 0 @endif">
+
                                                 <input type="hidden" id="old_{{$item->id}}_{{$project->id}}"
                                                        value="@if(isset($assigned_developers[$item->id][$project->id]) && $assigned_developers[$item->id][$project->id]!=null){{trim($assigned_developers[$item->id][$project->id]->estimate_effort)}}@else 0 @endif">
                                             </td>
@@ -146,9 +147,16 @@
                                    style="height:100% !important; border:0 !important;margin-bottom:0!important;">
                                 <tr>
                                     <td style="height:100% !important; width:50%;margin:0!important;background-color:#f3e5f5">
-                                        <h6>
+                                        <h6 id="display_developer_{{$item->id}}">
                                             <b>{{$total_developer_estimated[$item->id]}}%</b>
                                         </h6>
+                                        @if(isset($total_developer_estimated[$item->id]))
+                                            <input id="developer_{{$item->id}}" type="hidden"
+                                                   value="{{$total_developer_estimated[$item->id]}}">
+                                        @else
+                                            <input id="developer_{{$item->id}}" type="hidden"
+                                                   value="0">
+                                        @endif
                                     </td>
 
                                 </tr>
@@ -165,7 +173,7 @@
                                    style="height:100%; border:0 !important;margin-bottom:0!important;">
                                 <tr>
                                     <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
-                                        <h6 id="display_{{$project->id}}">
+                                        <h6 id="display_project_{{$project->id}}">
                                             @if(isset($total_project_estimated[$project->id]))
                                                 <b>{{$total_project_estimated[$project->id]}}
                                                     %</b>
@@ -174,10 +182,10 @@
                                             @endif
                                         </h6>
                                         @if(isset($total_project_estimated[$project->id]))
-                                            <input id="{{$project->id}}" type="hidden"
+                                            <input id="project_{{$project->id}}" type="hidden"
                                                    value="{{$total_project_estimated[$project->id]}}">
                                         @else
-                                            <input id="{{$project->id}}" type="hidden"
+                                            <input id="project_{{$project->id}}" type="hidden"
                                                    value="0">
                                         @endif
                                     </td>
@@ -208,12 +216,23 @@
 
         function sumEfforts(developer_id, project_id, new_val) {
             var old_effort = document.getElementById("old_" + developer_id + "_" + project_id).value;
-            var current_effort = document.getElementById(project_id).value;
-            var total_effort = (parseFloat(current_effort) - old_effort) + parseFloat(new_val);
+            var current_project_effort = document.getElementById("project_"+project_id).value;
+            var current_developer_effort = document.getElementById("developer_"+developer_id).value;
 
-            document.getElementById(project_id).value = total_effort;
+            var total_project_effort = (parseFloat(current_project_effort) - old_effort) + parseFloat(new_val);
+            var total_developer_effort = (parseFloat(current_developer_effort) - old_effort) + parseFloat(new_val);
+
+            /* compute for the total project estimate efforts*/
+            document.getElementById("project_"+project_id).value = total_project_effort;
+            document.getElementById("developer_"+developer_id).value = total_developer_effort;
+
             document.getElementById("old_" + developer_id + "_" + project_id).value = parseInt(new_val);
-            document.getElementById("display_" + project_id).innerHTML = '<b>' + total_effort + '%</b>';
+
+            /*Display newly computed efforts*/
+            document.getElementById("display_project_" + project_id).innerHTML = '<b>' + total_project_effort + '%</b>';
+            document.getElementById("display_developer_" + developer_id).innerHTML = '<b>' + total_developer_effort + '%</b>';
+
+            /* compute for the total developer estimate efforts*/
 
         }
     </script>
