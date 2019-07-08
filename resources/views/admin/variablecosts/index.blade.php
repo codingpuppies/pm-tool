@@ -11,20 +11,19 @@
 
         <form action="{{ route(ADMIN . '.variablecosts.create') }}" method="GET" id="frm_fixed_costs">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <input type="hidden" id="is_edit" name="is_edit" value="0">
                     <button class="btn btn-info" id="btn-estimate" onclick="edit_estimate()">
-                        Estimate
+                        Edit Estimate
                     </button>
 
-                    <button class="btn btn-success" id="btn-actual" onclick="edit_actual()">
-                        Actual
-                    </button>
+{{--                    <button class="btn btn-success" id="btn-actual" onclick="edit_actual()">--}}
+{{--                        Actual--}}
+{{--                    </button>--}}
 
                 </div>
                 <div class="col-md-2  pull-right">
-                    <select class="form-control" name="month" id="month"
-                            onchange="submitForm();">
+                    <select class="form-control" name="month" id="month">
                         @for($month=0;$month<12;$month++)
                             <option value="{{$month}}"
                                     @if($_month==$month) selected @endif>{{date_format(date_create("2019-".$month."-01"),"F")}}</option>
@@ -33,15 +32,14 @@
                 </div>
                 <div class="col-md-2  pull-right">
 
-                    <select class="form-control" name="year" id="year" onchange="submitForm();">
+                    <select class="form-control" name="year" id="year">
                         @for($year=2019;$year<2025;$year++)
                             <option value="{{$year}}" @if($_year==$year) selected @endif>{{$year}}</option>
                         @endfor
                     </select>
                 </div>
-
-                <div class="col-md-6 pull-right">
-
+                <div class="col-md-1  pull-right">
+                    <button class="form-control btn-primary" onclick="submitForm();">GO</button>
                 </div>
             </div>
 
@@ -200,7 +198,7 @@
                     </td>
 
                 @endforeach
-                
+
             </tr>
             </tbody>
 
