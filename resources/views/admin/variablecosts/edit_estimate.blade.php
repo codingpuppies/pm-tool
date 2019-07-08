@@ -115,7 +115,7 @@
                                         <tr>
                                             <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
                                                 <input placeholder="0" type="number" class="form-control"
-                                                       onchange="sumEfforts({{$item->id}},{{$project->id}},this.value)"
+                                                       onchange="sumEfforts({{$item->id}},{{$project->id}},this)"
                                                        name="efforts[{{$project->id}}][{{$item->id}}][]"
                                                        value="@if(isset($assigned_developers[$item->id][$project->id]) && $assigned_developers[$item->id][$project->id]!=null){{trim($assigned_developers[$item->id][$project->id]->estimate_effort)}}@else 0 @endif">
 
@@ -214,25 +214,36 @@
             form.submit();
         }
 
-        function sumEfforts(developer_id, project_id, new_val) {
+        function sumEfforts(developer_id, project_id, dev_effort) {
+            var new_effort = dev_effort.value;
             var old_effort = document.getElementById("old_" + developer_id + "_" + project_id).value;
             var current_project_effort = document.getElementById("project_"+project_id).value;
             var current_developer_effort = document.getElementById("developer_"+developer_id).value;
 
-            var total_project_effort = (parseFloat(current_project_effort) - old_effort) + parseFloat(new_val);
-            var total_developer_effort = (parseFloat(current_developer_effort) - old_effort) + parseFloat(new_val);
+            var total_project_effort = (parseFloat(current_project_effort) - old_effort) + parseFloat(new_effort);
+            var total_developer_effort = (parseFloat(current_developer_effort) - old_effort) + parseFloat(new_effort);
+
+            // if total project/developer is over 100, reset to previous value
+            if(total_project_effort > 100 || total_developer_effort > 100 ){
+                alert('over 100');
+                total_project_effort = (parseFloat(current_project_effort) - new_effort) + parseFloat(new_effort);
+                total_developer_effort = (parseFloat(current_developer_effort) - new_effort) + parseFloat(new_effort);
+                new_effort = old_effort;
+                dev_effort.value = old_effort;
+            }
+
 
             /* compute for the total project estimate efforts*/
             document.getElementById("project_"+project_id).value = total_project_effort;
             document.getElementById("developer_"+developer_id).value = total_developer_effort;
 
-            document.getElementById("old_" + developer_id + "_" + project_id).value = parseInt(new_val);
+            // old input value for effort
+            document.getElementById("old_" + developer_id + "_" + project_id).value = parseInt(new_effort);
 
             /*Display newly computed efforts*/
             document.getElementById("display_project_" + project_id).innerHTML = '<b>' + total_project_effort + '%</b>';
             document.getElementById("display_developer_" + developer_id).innerHTML = '<b>' + total_developer_effort + '%</b>';
 
-            /* compute for the total developer estimate efforts*/
 
         }
     </script>
