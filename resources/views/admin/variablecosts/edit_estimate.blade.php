@@ -115,8 +115,10 @@
                                         <tr>
                                             <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
                                                 <input placeholder="0" type="number" class="form-control"
-                                                       onchange="sumEfforts({{$project->id}},this.value)"
+                                                       onchange="sumEfforts({{$item->id}},{{$project->id}},this.value)"
                                                        name="efforts[{{$project->id}}][{{$item->id}}][]"
+                                                       value="@if(isset($assigned_developers[$item->id][$project->id]) && $assigned_developers[$item->id][$project->id]!=null){{trim($assigned_developers[$item->id][$project->id]->estimate_effort)}}@else 0 @endif">
+                                                <input type="hidden" id="old_{{$item->id}}_{{$project->id}}"
                                                        value="@if(isset($assigned_developers[$item->id][$project->id]) && $assigned_developers[$item->id][$project->id]!=null){{trim($assigned_developers[$item->id][$project->id]->estimate_effort)}}@else 0 @endif">
                                             </td>
 
@@ -124,7 +126,9 @@
                                     </table>
                                 </td>
                             @else
-                                <td style="padding:0!important ; background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+                                <td style=" padding:0!important ;
+                                                       background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}
+                                        ">
                                     <table class="table text-center"
                                            style="height:100%; border:0 !important;margin-bottom:0!important;">
                                         <tr>
@@ -163,15 +167,18 @@
                                     <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
                                         <h6 id="display_{{$project->id}}">
                                             @if(isset($total_project_estimated[$project->id]))
-                                                <b>{{$total_project_estimated[$project->id]}}%</b>
+                                                <b>{{$total_project_estimated[$project->id]}}
+                                                    %</b>
                                             @else
                                                 <b>0%</b>
                                             @endif
                                         </h6>
                                         @if(isset($total_project_estimated[$project->id]))
-                                            <input id="{{$project->id}}" type="hidden" value="{{$total_project_estimated[$project->id]}}">
+                                            <input id="{{$project->id}}" type="hidden"
+                                                   value="{{$total_project_estimated[$project->id]}}">
                                         @else
-                                            <input id="{{$project->id}}" type="hidden" value="0">
+                                            <input id="{{$project->id}}" type="hidden"
+                                                   value="0">
                                         @endif
                                     </td>
 
@@ -199,11 +206,14 @@
             form.submit();
         }
 
-        function sumEfforts(id,new_val) {
-            var current_effort = document.getElementById(id).value;
-            var total_effort = parseFloat(current_effort) + parseFloat(new_val);
-            document.getElementById(id).value = total_effort;
-            document.getElementById("display_"+id).innerHTML = '<b>'+total_effort+'%</b>';
+        function sumEfforts(developer_id, project_id, new_val) {
+            var old_effort = document.getElementById("old_" + developer_id + "_" + project_id).value;
+            var current_effort = document.getElementById(project_id).value;
+            var total_effort = (parseFloat(current_effort) - old_effort) + parseFloat(new_val);
+
+            document.getElementById(project_id).value = total_effort;
+            document.getElementById("old_" + developer_id + "_" + project_id).value = parseInt(new_val);
+            document.getElementById("display_" + project_id).innerHTML = '<b>' + total_effort + '%</b>';
 
         }
     </script>
