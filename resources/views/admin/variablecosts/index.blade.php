@@ -168,38 +168,38 @@
                     </td>
                 </tr>
             @endforeach
-            <tr>
-                <td><b>TOTAL</b></td>
-                @foreach($projects as $project)
-                    <td style="padding:0!important ;">
-                        <table class="table text-center"
-                               style="height:100%; border:0 !important;margin-bottom:0!important;">
-                            <tr>
-                                <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
-                                    <h6>
-                                        @if(isset($total_project_estimated[$project->id]))
-                                            <b>{{$total_project_estimated[$project->id]}}%</b>
-                                        @else
-                                            <b>0%</b>
-                                        @endif
-                                    </h6>
-                                </td>
-                                <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][1] }}">
-                                    <h6>
-                                        @if(isset($assigned_developers[$item->id][$project->id]))
-                                            <b>{{$assigned_developers[$item->id][$project->id]->actual_effort}}%</b>
-                                        @else
-                                            <b>0%</b>
-                                        @endif
-                                    </h6>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
+{{--            <tr>--}}
+{{--                <td><b>TOTAL</b></td>--}}
+{{--                @foreach($projects as $project)--}}
+{{--                    <td style="padding:0!important ;">--}}
+{{--                        <table class="table text-center"--}}
+{{--                               style="height:100%; border:0 !important;margin-bottom:0!important;">--}}
+{{--                            <tr>--}}
+{{--                                <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">--}}
+{{--                                    <h6>--}}
+{{--                                        @if(isset($total_project_estimated[$project->id]))--}}
+{{--                                            <b>{{$total_project_estimated[$project->id]}}%</b>--}}
+{{--                                        @else--}}
+{{--                                            <b>0%</b>--}}
+{{--                                        @endif--}}
+{{--                                    </h6>--}}
+{{--                                </td>--}}
+{{--                                <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][1] }}">--}}
+{{--                                    <h6>--}}
+{{--                                        @if(isset($assigned_developers[$item->id][$project->id]))--}}
+{{--                                            <b>{{$assigned_developers[$item->id][$project->id]->actual_effort}}%</b>--}}
+{{--                                        @else--}}
+{{--                                            <b>0%</b>--}}
+{{--                                        @endif--}}
+{{--                                    </h6>--}}
+{{--                                </td>--}}
+{{--                            </tr>--}}
+{{--                        </table>--}}
+{{--                    </td>--}}
 
-                @endforeach
+{{--                @endforeach--}}
 
-            </tr>
+{{--            </tr>--}}
             </tbody>
 
         </table>
