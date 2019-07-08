@@ -11,6 +11,6 @@ class VariableCost extends Model
 
     protected $table = 'variable_cost';
     protected $fillable = [
-        'project_id', 'developer_id', 'estimate_effort','actual_effort','date','mode',
+        'project_id', 'developer_id', 'estimate_effort','actual_effort','date','mode','month','year',
     ];
 }

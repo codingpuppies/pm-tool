@@ -9,12 +9,12 @@
 
     <div class="mB-20">
 
-        <form action="{{ route(ADMIN . '.variablecosts.create') }}" method="GET" id="frm_fixed_costs">
+        <form action="{{ route(ADMIN . '.variablecosts.create') }}" method="GET" id="frm_variable_cost">
             <div class="row">
                 <div class="col-md-8">
 
                     <button class="btn btn-info">
-                        Update
+                        Back
                     </button>
 
 
@@ -46,71 +46,92 @@
     </div>
 
 
-    <div class="bgc-white bd bdrs-3 p-20 mB-20 mT-20">
-        <table class="table table-striped mB-0" cellspacing="0" width="100%">
-            <thead>
-            <tr>
-                <th class="text-center align-middle" style="background-color:{{config('variables.developer_column')}}">Developers</th>
+    <div class="bgc-white bd bdrs-3 p-20 mB-20 mT-20 pB-60">
+
+        <form action="/admin/variablecosts/1" method="post">
+            {{csrf_field()}}
+            {{ method_field('PUT') }}
+            <input type="hidden" name="month" value="{{$_month}}">
+            <input type="hidden" name="year" value="{{$_year}}">
+            <table class="table table-striped mB-0" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th class="text-center align-middle"
+                        style="background-color:{{config('variables.developer_column')}}">
+                        Developers
+                    </th>
 
 
-            @foreach($projects as $project)
+                    @foreach($projects as $project)
 
-                    <td style="padding:0!important; width:10%">
+                        <td style="padding:0!important; width:10%">
+                            <table class="table text-center"
+                                   style="height:100%; border:0 !important;margin-bottom:0!important;">
+                                <tr>
+                                    <td colspan="2" class="c-white"
+                                        style="background-color:{{ config('variables.table_column')[$project->id%4]  }};">
+                                        {{$project->project_name}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+                                        <h6>EST</h6>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    @endforeach
+                    <td style="padding:0!important ;">
                         <table class="table text-center"
                                style="height:100%; border:0 !important;margin-bottom:0!important;">
                             <tr>
                                 <td colspan="2" class="c-white"
-                                    style="background-color:{{ config('variables.table_column')[$project->id%4]  }};">
-                                    {{$project->project_name}}
+                                    style="background-color:#9c27b0;">
+                                    Total
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+                                <td style="width:50%;margin:0!important;background-color:#f3e5f5">
                                     <h6>EST</h6>
                                 </td>
                             </tr>
                         </table>
                     </td>
-                @endforeach
-                <td style="padding:0!important ;">
-                    <table class="table text-center"
-                           style="height:100%; border:0 !important;margin-bottom:0!important;">
-                        <tr>
-                            <td colspan="2" class="c-white"
-                                style="background-color:#9c27b0;">
-                                Total
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width:50%;margin:0!important;background-color:#f3e5f5">
-                                <h6>EST</h6>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <th class="text-center align-middle" style="background-color:{{config('variables.action_column')}}">Action</th>
 
-            </tr>
-            </thead>
+                </tr>
+                </thead>
 
-            <tbody>
-            @foreach ($developers as $item)
-                <tr>
-                    <form>
+                <tbody>
+                @foreach ($developers as $item)
+                    <tr>
                         <td>{{ $item->first_name }} {{ $item->last_name }}</td>
                         @foreach($projects as $project)
-                            <td style="padding:0!important ;">
-                                <table class="table text-center"
-                                       style="height:100%; border:0 !important;margin-bottom:0!important;">
-                                    <tr>
-                                        <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
-                                            <input placeholder="0" type="number" class="form-control"
-                                                   value="@if(isset($assigned_developers[$item->id][$project->id])){{trim($assigned_developers[$item->id][$project->id]->estimate_effort)}}@endif">
-                                        </td>
+                            @if(isset($assigned_projects[$item->id][$project->id]))
+                                <td style="padding:0!important ;">
+                                    <table class="table text-center"
+                                           style="height:100%; border:0 !important;margin-bottom:0!important;">
+                                        <tr>
+                                            <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+                                                <input placeholder="0" type="number" class="form-control"
+                                                       name="efforts[{{$project->id}}][{{$item->id}}][]"
+                                                       value="@if(isset($assigned_developers[$item->id][$project->id]) && $assigned_developers[$item->id][$project->id]!=null){{trim($assigned_developers[$item->id][$project->id]->estimate_effort)}}@else 0 @endif">
+                                            </td>
 
-                                    </tr>
-                                </table>
-                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            @else
+                                <td style="padding:0!important ; background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+                                    <table class="table text-center"
+                                           style="height:100%; border:0 !important;margin-bottom:0!important;">
+                                        <tr>
+                                            <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+                                                <label class="form-label">--</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            @endif
 
                         @endforeach
                         <td style="padding:0!important; background-color:#f3e5f5;">
@@ -126,55 +147,60 @@
                                 </tr>
                             </table>
                         </td>
-                    </form>
-                </tr>
-            @endforeach
-            <tr>
-                <td><b>TOTAL</b></td>
-                @foreach($projects as $project)
+
+                    </tr>
+                @endforeach
+                <tr>
+                    <td><b>TOTAL</b></td>
+                    @foreach($projects as $project)
+                        <td style="padding:0!important;">
+                            <table class="table text-center"
+                                   style="height:100%; border:0 !important;margin-bottom:0!important;">
+                                <tr>
+                                    <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+                                        <h6>
+                                            @if(isset($total_project_estimated[$project->id]))
+                                                <b>{{$total_project_estimated[$project->id]}}%</b>
+                                            @else
+                                                <b>0%</b>
+                                            @endif
+                                        </h6>
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </td>
+
+                    @endforeach
                     <td style="padding:0!important ;">
                         <table class="table text-center"
                                style="height:100%; border:0 !important;margin-bottom:0!important;">
+
                             <tr>
-                                <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
+                                <td style="width:50%;margin:0!important;background-color:#f3e5f5">
                                     <h6>
-                                        @if(isset($assigned_developers[$item->id][$project->id]))
-                                            <b>{{$assigned_developers[$item->id][$project->id]->estimate_effort}}%</b>
-                                        @else
-                                            <b>0%</b>
-                                        @endif
+                                        <b>{{$total_developer_estimated[$item->id]}}%</b>
                                     </h6>
                                 </td>
 
                             </tr>
                         </table>
                     </td>
+                </tr>
 
-                @endforeach
-                <td style="padding:0!important ;">
-                    <table class="table text-center"
-                           style="height:100%; border:0 !important;margin-bottom:0!important;">
+                </tbody>
 
-                        <tr>
-                            <td style="width:50%;margin:0!important;background-color:#f3e5f5">
-                                <h6>
-                                    <b>{{$total_developer_estimated[$item->id]}}%</b>
-                                </h6>
-                            </td>
-
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            </tbody>
-
-        </table>
+            </table>
+            <button class="pull-right btn btn-primary mt-2">UPDATE</button>
+            <button class="pull-right btn btn-outline-danger mt-2 mr-1">CANCEL</button>
+        </form>
     </div>
 
     <script>
         function submitForm() {
-            const form = document.getElementById("frm_fixed_costs");
-            form.action = "/admin/variablecosts";
+            const form = document.getElementById("frm_variable_cost");
+            form.action = "/admin/variablecosts/edit/edit_variable";
+            document.getElementById("is_edit").value = '{{config('variables.EDIT_ESTIMATE_VARIABLE_COST')}}';
             form.submit();
         }
     </script>

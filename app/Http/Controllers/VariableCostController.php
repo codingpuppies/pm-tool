@@ -16,7 +16,7 @@ class VariableCostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request )
+    public function index(Request $request)
     {
         // get data for specific month and year, default is current month and year
         $month = isset($request->month) ? $request->month : (int)date('m');
@@ -48,18 +48,25 @@ class VariableCostController extends Controller
         $assigned_developers = [];
         $total_developer_estimated = [];
         $total_developer_actual = [];
+        $total_project_estimated = [];
+        $total_project_actual = [];
         $assigned_projects = [];
 
         // initialize effort
-        foreach($developers as $developer){
+        foreach ($developers as $developer) {
             $total_developer_estimated[$developer->id] = 0;
             $total_developer_actual[$developer->id] = 0;
         }
+        // initialize project total assigned efforts
+        foreach ($projects as $project) {
+            $total_project_estimated[$project->id] = 0;
+            $total_project_actual[$project->id] = 0;
+        }
 
         // check if assigned in project
-        foreach($developers as $developer){
-            foreach($projectdevelopers as $proj_developer){
-                if($proj_developer->developer_id == $developer->id){
+        foreach ($developers as $developer) {
+            foreach ($projectdevelopers as $proj_developer) {
+                if ($proj_developer->developer_id == $developer->id) {
                     $assigned_projects[$developer->id][$proj_developer->project_id] = true;
                 }
             }
@@ -68,18 +75,28 @@ class VariableCostController extends Controller
         // comput for each effort
         foreach ($variable_cost as $cost) {
             $assigned_developers[$cost->developer_id][$cost->project_id] = $cost;
+
+            // increment developer total efforts
             $total_developer_estimated[$cost->developer_id] += $cost->estimate_effort;
             $total_developer_actual[$cost->developer_id] += $cost->actual_effort;
+
+            // increment developer total efforts
+            $total_project_estimated[$cost->project_id] += $cost->estimate_effort;
+            $total_project_actual[$cost->project_id] += $cost->actual_effort;
+
+
         }
 
         $url = '';
-        if(isset($request->is_edit)){
-            if($request->is_edit==config('variables.EDIT_ESTIMATE_VARIABLE_COST')){
+        if (isset($request->is_edit)) {
+            if ($request->is_edit == config('variables.EDIT_ESTIMATE_VARIABLE_COST')) {
                 $url = 'admin.variablecosts.edit_estimate';
-            }else{
+            }else if ($request->is_edit == config('variables.EDIT_ACTUAL_VARIABLE_COST')) {
                 $url = 'admin.variablecosts.edit_actual';
+            }else{
+                $url = 'admin.variablecosts.index';
             }
-        }else{
+        } else {
             $url = 'admin.variablecosts.index';
         }
 
@@ -92,6 +109,8 @@ class VariableCostController extends Controller
             ->with('assigned_projects', $assigned_projects)
             ->with('total_developer_estimated', $total_developer_estimated)
             ->with('total_developer_actual', $total_developer_actual)
+            ->with('total_project_estimated', $total_project_estimated)
+            ->with('total_project_actual', $total_project_actual)
             ->with('variable_cost', $variable_cost)
             ->with('_month', $month)
             ->with('_year', $year);
@@ -181,9 +200,62 @@ class VariableCostController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $mode)
     {
         /**/
+        $efforts = $request->efforts;
+
+        // get project id as array keys
+        $projects = array_keys($efforts);
+
+        // each effort input is arrayed, so project then developer index
+        foreach ($projects as $project) {
+            // get developer id via array key
+            $developers = array_keys($efforts[$project]);
+
+            foreach ($developers as $developer) {
+                // get inputted effort value
+                $effort = $efforts[$project][$developer][0];
+                if($effort === null || $effort == '') $effort = 0;
+
+                // search if existing effort per project
+                $variable_cost = VariableCost::where('project_id', $project)
+                    ->where('developer_id', $developer)
+                    ->where('month', $request->month)
+                    ->where('year', $request->year)
+                    ->whereNull('deleted_at')
+                    ->first();
+
+                // if there is no value yet, create
+                if (!$variable_cost) {
+
+                    $record = new VariableCost();
+                    $record->project_id = $project;
+                    $record->developer_id = $developer;
+                    $record->estimate_effort = $effort;
+                    $record->actual_effort = 0;
+                    $record->month = $request->month;
+                    $record->year = $request->year;
+                    $record->mode = 1;
+                    $record->date = date('Y-m-d');
+                    $record->save();
+
+                } else {
+                    // if existing, update
+
+                    VariableCost::where('project_id', $project)
+                        ->where('developer_id', $developer)
+                        ->where('month', $request->month)
+                        ->where('year', $request->year)
+                        ->whereNull('deleted_at')
+                        ->update([
+                            'estimate_effort' => $effort
+                        ]);
+
+                }
+            }
+        }
+        return redirect()->route(ADMIN . '.variablecosts.index', ['month' => $request->month, 'year' => $request->year])->withSuccess(trans('app.success_update'));
     }
 
     /**
