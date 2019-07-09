@@ -60,18 +60,6 @@
                             style="background-color:{{ config('variables.table_column')[$month]}};">{{date_format(date_create("2019-".($month+1)."-01"),"M")}}</td>
                     @endfor
 
-                    <td style="padding:0!important ;">
-                        <table class="table text-center"
-                               style="height:100%; border:0 !important;margin-bottom:0!important;">
-                            <tr>
-                                <td colspan="2" class="c-white"
-                                    style="background-color:#9c27b0;">
-                                    Total
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-
                 </tr>
                 </thead>
 
@@ -95,7 +83,6 @@
                                         <td style="width:7.5%;margin:0!important;">
                                             <b>
                                                 <input placeholder="0" type="number" class="form-control"
-                                                       onchange="sumEfforts({{$month}},{{$project->id}},this)"
                                                        name="efforts[{{$project->id}}][{{$month}}][]"
                                                        value="{{$effort->percentage}}">
 
@@ -111,7 +98,6 @@
                                     <b>
                                         <input placeholder="0" type="number" class="form-control"
                                                min="0"
-                                               onchange="sumEfforts({{$month}},{{$project->id}},this)"
                                                name="efforts[{{$project->id}}][{{$month}}][]"
                                                value="0">
 
@@ -122,11 +108,6 @@
                                 </td>
                             @endif
                         @endfor
-                        @if(isset($total_allocated_effort[$project->id]))
-                            <td><b>{{$total_allocated_effort[$project->id]}}%</b></td>
-                        @else
-                            <td>0</td>
-                        @endif
                     </tr>
                 @endforeach
 
@@ -144,39 +125,6 @@
             form.action = "/admin/variablecosts/edit/edit_variable";
             document.getElementById("is_edit").value = '{{config('variables.EDIT_ESTIMATE_VARIABLE_COST')}}';
             form.submit();
-        }
-
-        function sumEfforts(developer_id, project_id, dev_effort) {
-            var new_effort = dev_effort.value;
-            var old_effort = document.getElementById("old_" + developer_id + "_" + project_id).value;
-            // var current_project_effort = document.getElementById("project_"+project_id).value;
-            var current_developer_effort = document.getElementById("developer_"+developer_id).value;
-
-            // var total_project_effort = (parseFloat(current_project_effort) - old_effort) + parseFloat(new_effort);
-            var total_developer_effort = (parseFloat(current_developer_effort) - old_effort) + parseFloat(new_effort);
-
-            // if total project/developer is over 100, reset to previous value
-            if(total_developer_effort > 100 ){
-                alert('over 100');
-                // total_project_effort = (parseFloat(current_project_effort) - new_effort) + parseFloat(new_effort);
-                total_developer_effort = (parseFloat(current_developer_effort) - new_effort) + parseFloat(new_effort);
-                new_effort = old_effort;
-                dev_effort.value = old_effort;
-            }
-
-
-            /* compute for the total project estimate efforts*/
-            // document.getElementById("project_"+project_id).value = total_project_effort;
-            document.getElementById("developer_"+developer_id).value = total_developer_effort;
-
-            // old input value for effort
-            document.getElementById("old_" + developer_id + "_" + project_id).value = parseInt(new_effort);
-
-            /*Display newly computed efforts*/
-            // document.getElementById("display_project_" + project_id).innerHTML = '<b>' + total_project_effort + '%</b>';
-            document.getElementById("display_developer_" + developer_id).innerHTML = '<b>' + total_developer_effort + '%</b>';
-
-
         }
     </script>
 
