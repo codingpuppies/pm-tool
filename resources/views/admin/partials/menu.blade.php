@@ -34,6 +34,15 @@
 </li>
 
 <li class="nav-item">
+    <a class="sidebar-link {{ starts_with($route, ADMIN . '.projectfixedcost') ? 'active' : '' }}" href="{{ route(ADMIN . '.projectfixedcost.index') }}">
+        <span class="icon-holder">
+            <i class="c-amber-500 ti-layout-grid3"></i>
+        </span>
+        <span class="title">Project Fixed Cost Allocation</span>
+    </a>
+</li>
+
+<li class="nav-item">
     <a class="sidebar-link {{ starts_with($route, ADMIN . '.developers') ? 'active' : '' }}" href="{{ route(ADMIN . '.developers.index') }}">
         <span class="icon-holder">
             <i class="c-green-500 fa fa-user-circle"></i>
@@ -66,7 +75,8 @@
         </span>
         <span class="title">Variable Costs</span>
     </a>
-</li><li class="nav-item">
+</li>
+<li class="nav-item">
     <a class="sidebar-link {{ starts_with($route, ADMIN . '.othercosts') ? 'active' : '' }}" href="{{ route(ADMIN . '.othercosts.index') }}">
         <span class="icon-holder">
             <i class="c-yellow-900 ti-face-smile"></i>
