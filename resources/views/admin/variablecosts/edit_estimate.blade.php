@@ -165,38 +165,6 @@
 
                     </tr>
                 @endforeach
-{{--                <tr>--}}
-{{--                    <td><b>TOTAL</b></td>--}}
-{{--                    @foreach($projects as $project)--}}
-{{--                        <td style="padding:0!important;">--}}
-{{--                            <table class="table text-center"--}}
-{{--                                   style="height:100%; border:0 !important;margin-bottom:0!important;">--}}
-{{--                                <tr>--}}
-{{--                                    <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">--}}
-{{--                                        <h6 id="display_project_{{$project->id}}">--}}
-{{--                                            @if(isset($total_project_estimated[$project->id]))--}}
-{{--                                                <b>{{$total_project_estimated[$project->id]}}--}}
-{{--                                                    %</b>--}}
-{{--                                            @else--}}
-{{--                                                <b>0%</b>--}}
-{{--                                            @endif--}}
-{{--                                        </h6>--}}
-{{--                                        @if(isset($total_project_estimated[$project->id]))--}}
-{{--                                            <input id="project_{{$project->id}}" type="hidden"--}}
-{{--                                                   value="{{$total_project_estimated[$project->id]}}">--}}
-{{--                                        @else--}}
-{{--                                            <input id="project_{{$project->id}}" type="hidden"--}}
-{{--                                                   value="0">--}}
-{{--                                        @endif--}}
-{{--                                    </td>--}}
-
-{{--                                </tr>--}}
-{{--                            </table>--}}
-{{--                        </td>--}}
-
-{{--                    @endforeach--}}
-
-{{--                </tr>--}}
 
                 </tbody>
 

@@ -1,7 +1,7 @@
 @extends('admin.default')
 
 @section('page-header')
-    Variable Costs - Estimates Update
+    Project Fixed Costs Allocation Update
     <small>{{ trans('app.manage') }}</small>
 @endsection
 
@@ -22,12 +22,7 @@
 
                 </div>
                 <div class="col-md-2  pull-right">
-                    <select class="form-control" name="month" id="month">
-                        @for($month=0;$month<12;$month++)
-                            <option value="{{$month}}"
-                                    @if($_month==$month) selected @endif>{{date_format(date_create("2019-".$month."-01"),"F")}}</option>
-                        @endfor
-                    </select>
+
                 </div>
                 <div class="col-md-2  pull-right">
                     <select class="form-control" name="year" id="year">
@@ -51,38 +46,20 @@
         <form action="/admin/variablecosts/1" method="post">
             {{csrf_field()}}
             {{ method_field('PUT') }}
-            <input type="hidden" name="month" value="{{$_month}}">
             <input type="hidden" name="year" value="{{$_year}}">
 
 
             <table class="table table-striped mB-0" cellspacing="0" width="100%">
                 <thead>
                 <tr>
-                    <th class="text-center align-middle"
-                        style="background-color:{{config('variables.developer_column')}}">
-                        Developers
+                    <th class="text-center align-middle" style="background-color:{{config('variables.developer_column')}}">
+                        Project
                     </th>
+                    @for($month=0;$month<12;$month++)
+                        <td class="c-white text-center"
+                            style="background-color:{{ config('variables.table_column')[$month]}};">{{date_format(date_create("2019-".($month+1)."-01"),"M")}}</td>
+                    @endfor
 
-
-                    @foreach($projects as $project)
-
-                        <td style="padding:0!important; width:10%">
-                            <table class="table text-center"
-                                   style="height:100%; border:0 !important;margin-bottom:0!important;">
-                                <tr>
-                                    <td colspan="2" class="c-white"
-                                        style="background-color:{{ config('variables.table_column')[$project->id%4]  }};">
-                                        {{$project->project_name}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
-                                        <h6>EST</h6>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    @endforeach
                     <td style="padding:0!important ;">
                         <table class="table text-center"
                                style="height:100%; border:0 !important;margin-bottom:0!important;">
@@ -92,11 +69,6 @@
                                     Total
                                 </td>
                             </tr>
-                            <tr>
-                                <td style="width:50%;margin:0!important;background-color:#f3e5f5">
-                                    <h6>EST</h6>
-                                </td>
-                            </tr>
                         </table>
                     </td>
 
@@ -104,99 +76,59 @@
                 </thead>
 
                 <tbody>
-                @foreach ($developers as $item)
+                @foreach($projects as $project)
                     <tr>
-                        <td>{{ $item->first_name }} {{ $item->last_name }}</td>
-                        @foreach($projects as $project)
-                            @if(isset($assigned_projects[$item->id][$project->id]))
-                                <td style="padding:0!important ;">
-                                    <table class="table text-center"
-                                           style="height:100%; border:0 !important;margin-bottom:0!important;">
-                                        <tr>
-                                            <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
-                                                <input placeholder="0" type="number" class="form-control"
-                                                       onchange="sumEfforts({{$item->id}},{{$project->id}},this)"
-                                                       name="efforts[{{$project->id}}][{{$item->id}}][]"
-                                                       value="@if(isset($assigned_developers[$item->id][$project->id]) && $assigned_developers[$item->id][$project->id]!=null){{trim($assigned_developers[$item->id][$project->id]->estimate_effort)}}@else 0 @endif">
-
-                                                <input type="hidden" id="old_{{$item->id}}_{{$project->id}}"
-                                                       value="@if(isset($assigned_developers[$item->id][$project->id]) && $assigned_developers[$item->id][$project->id]!=null){{trim($assigned_developers[$item->id][$project->id]->estimate_effort)}}@else 0 @endif">
-                                            </td>
-
-                                        </tr>
-                                    </table>
-                                </td>
-                            @else
-                                <td style=" padding:0!important ;
-                                                       background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}
-                                        ">
-                                    <table class="table text-center"
-                                           style="height:100%; border:0 !important;margin-bottom:0!important;">
-                                        <tr>
-                                            <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">
-                                                <label class="form-label">--</label>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            @endif
-
-                        @endforeach
-                        <td style="padding:0!important; background-color:#f3e5f5;">
+                        <td style="padding:0!important ;">
                             <table class="table text-center"
-                                   style="height:100% !important; border:0 !important;margin-bottom:0!important;">
+                                   style="height:100%; border:0 !important;margin-bottom:0!important;">
                                 <tr>
-                                    <td style="height:100% !important; width:50%;margin:0!important;background-color:#f3e5f5">
-                                        <h6 id="display_developer_{{$item->id}}">
-                                            <b>{{$total_developer_estimated[$item->id]}}%</b>
-                                        </h6>
-                                        @if(isset($total_developer_estimated[$item->id]))
-                                            <input id="developer_{{$item->id}}" type="hidden"
-                                                   value="{{$total_developer_estimated[$item->id]}}">
-                                        @else
-                                            <input id="developer_{{$item->id}}" type="hidden"
-                                                   value="0">
-                                        @endif
+                                    <td colspan="2">
+                                        {{$project->project_name}}
                                     </td>
-
                                 </tr>
                             </table>
                         </td>
+                        @for($month=0;$month<12;$month++)
+                            @if(isset($project_fixed_allocation[$project->id][$month]))
+                                @foreach($allocated_efforts as $effort)
+                                    @if($effort->project_id == $project->id && $effort->month == $month)
+                                        <td style="width:7.5%;margin:0!important;">
+                                            <b>
+                                                <input placeholder="0" type="number" class="form-control"
+                                                       onchange="sumEfforts({{$month}},{{$project->id}},this)"
+                                                       name="efforts[{{$project->id}}][{{$month}}][]"
+                                                       value="{{$effort->percentage}}">
 
+                                                <input type="hidden" id="old_{{$month}}_{{$project->id}}"
+                                                       value="{{$effort->percentage}}">
+
+                                            </b>
+                                        </td>
+                                    @endif
+                                @endforeach
+                            @else
+                                <td style="width:7.5%;margin:0!important;">
+                                    <b>
+                                        <input placeholder="0" type="number" class="form-control"
+                                               min="0"
+                                               onchange="sumEfforts({{$month}},{{$project->id}},this)"
+                                               name="efforts[{{$project->id}}][{{$month}}][]"
+                                               value="0">
+
+                                        <input type="hidden" id="old_{{$month}}_{{$project->id}}"
+                                               value="0">
+
+                                    </b>
+                                </td>
+                            @endif
+                        @endfor
+                        @if(isset($total_allocated_effort[$project->id]))
+                            <td><b>{{$total_allocated_effort[$project->id]}}%</b></td>
+                        @else
+                            <td>0</td>
+                        @endif
                     </tr>
                 @endforeach
-{{--                <tr>--}}
-{{--                    <td><b>TOTAL</b></td>--}}
-{{--                    @foreach($projects as $project)--}}
-{{--                        <td style="padding:0!important;">--}}
-{{--                            <table class="table text-center"--}}
-{{--                                   style="height:100%; border:0 !important;margin-bottom:0!important;">--}}
-{{--                                <tr>--}}
-{{--                                    <td style="width:50%;margin:0!important;background-color:{{ config('variables.table_est_act')[$project->id%4][0]  }}">--}}
-{{--                                        <h6 id="display_project_{{$project->id}}">--}}
-{{--                                            @if(isset($total_project_estimated[$project->id]))--}}
-{{--                                                <b>{{$total_project_estimated[$project->id]}}--}}
-{{--                                                    %</b>--}}
-{{--                                            @else--}}
-{{--                                                <b>0%</b>--}}
-{{--                                            @endif--}}
-{{--                                        </h6>--}}
-{{--                                        @if(isset($total_project_estimated[$project->id]))--}}
-{{--                                            <input id="project_{{$project->id}}" type="hidden"--}}
-{{--                                                   value="{{$total_project_estimated[$project->id]}}">--}}
-{{--                                        @else--}}
-{{--                                            <input id="project_{{$project->id}}" type="hidden"--}}
-{{--                                                   value="0">--}}
-{{--                                        @endif--}}
-{{--                                    </td>--}}
-
-{{--                                </tr>--}}
-{{--                            </table>--}}
-{{--                        </td>--}}
-
-{{--                    @endforeach--}}
-
-{{--                </tr>--}}
 
                 </tbody>
 

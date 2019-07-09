@@ -9,11 +9,10 @@
 
     <div class="mB-20">
 
-        <form action="{{ route(ADMIN . '.projectfixedcost.create') }}" method="GET" id="frm_fixed_costs">
+        <form action="{{ route(ADMIN . '.projectfixedcost.index') }}" method="GET" id="frm_fixed_costs">
             <div class="row">
                 <div class="col-md-7">
-                    <input type="hidden" id="is_edit" name="is_edit" value="0">
-                    <button class="btn btn-info" id="btn-estimate" onclick="edit_estimate()">
+                    <button class="btn btn-info" id="btn-estimate" onclick="edit_allocation()">
                         Edit
                     </button>
 
@@ -109,19 +108,12 @@
             form.submit();
         }
 
-        function edit_estimate() {
+        function edit_allocation() {
             const form = document.getElementById("frm_fixed_costs");
-            form.action = "/admin/projectfixedcost/edit/edit_variable";
-            document.getElementById("is_edit").value = '{{config('variables.EDIT_ESTIMATE_VARIABLE_COST')}}';
+            form.action = "{{ route(ADMIN . '.projectfixedcost.edit',1) }}";
             form.submit();
         }
 
-        function edit_actual() {
-            const form = document.getElementById("frm_fixed_costs");
-            form.action = "/admin/projectfixedcost/edit/edit_actual";
-            document.getElementById("is_edit").value = '{{config('variables.EDIT_ACTUAL_VARIABLE_COST')}}';
-            form.submit();
-        }
     </script>
 
 @endsection

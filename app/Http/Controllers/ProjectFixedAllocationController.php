@@ -115,19 +115,43 @@ class ProjectFixedAllocationController extends Controller
      */
     public function edit($id, Request $request)
     {
-        $item = VariableCost::find($id);
-        if ($item) {
-            $month = $item->month;
-            $year = $item->year;
-        } else {
-            $month = isset($request->month) ? $request->month : (int)date('m');
-            $year = isset($request->year) ? $request->year : (int)date('Y');
+        // get data for specific year, default is current month and year
+        $year = isset($request->year) ? $request->year : (int)date('Y');
+
+        // get projects
+        $projects = Project::all();
+
+        // get allocation per month
+        $allocated_efforts = ProjectFixedAllocation::where('year', $year)
+            ->whereNull('deleted_at')
+            ->get();
+
+        //total all allocated effort
+        $total_allocated_effort = [];
+        $project_fixed_allocation = [];
+
+
+        foreach ($projects as $project) {
+            $total_allocated_effort[$project->id] = 0;
+
+            foreach($allocated_efforts as $effort){
+                if($effort->project_id == $project->id){
+                    $total_allocated_effort[$project->id] += $effort->percentage;
+                    $project_fixed_allocation[$project->id][$effort->month] = true;
+                }
+            }
         }
 
-        return view('admin.variablecosts.edit')
-            ->with('item', $item)
-            ->with('_month', $month)
+        // send details
+        $url = 'admin.projectfixedcost.edit_estimate';
+
+        return view($url)
+            ->with('projects', $projects)
+            ->with('allocated_efforts', $allocated_efforts)
+            ->with('total_allocated_effort', $total_allocated_effort)
+            ->with('project_fixed_allocation', $project_fixed_allocation)
             ->with('_year', $year);
+
     }
 
     /**
