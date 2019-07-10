@@ -199,7 +199,7 @@ class ProjectFixedAllocationController extends Controller
                     ->where('year', $request->year)
                     ->whereNull('deleted_at')
                     ->first();
-                
+
                 // if there is no value yet, create
                 if (!$variable_cost) {
 

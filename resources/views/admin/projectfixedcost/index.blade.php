@@ -50,17 +50,6 @@
                         style="background-color:{{ config('variables.table_column')[$month]}};">{{date_format(date_create("2019-".($month+1)."-01"),"M")}}</td>
                 @endfor
 
-                <td style="padding:0!important ;">
-                    <table class="table text-center"
-                           style="height:100%; border:0 !important;margin-bottom:0!important;">
-                        <tr>
-                            <td colspan="2" class="c-white"
-                                style="background-color:#9c27b0;">
-                                Total
-                            </td>
-                        </tr>
-                    </table>
-                </td>
             </tr>
             </thead>
 
@@ -88,11 +77,7 @@
                             <td>0</td>
                         @endif
                     @endfor
-                    @if(isset($total_allocated_effort[$project->id]))
-                        <td><b>{{$total_allocated_effort[$project->id]}}%</b></td>
-                    @else
-                        <td>0</td>
-                    @endif
+
                 </tr>
             @endforeach
 
