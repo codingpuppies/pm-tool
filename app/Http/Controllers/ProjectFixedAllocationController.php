@@ -8,6 +8,7 @@ use App\ProjectDeveloper;
 use App\ProjectFixedAllocation;
 use App\VariableCost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProjectFixedAllocationController extends Controller
 {
@@ -32,8 +33,8 @@ class ProjectFixedAllocationController extends Controller
         foreach ($projects as $project) {
             $total_allocated_effort[$project->id] = 0;
 
-            foreach($allocated_efforts as $effort){
-                if($effort->project_id == $project->id){
+            foreach ($allocated_efforts as $effort) {
+                if ($effort->project_id == $project->id) {
                     $total_allocated_effort[$project->id] += $effort->percentage;
                     $project_fixed_allocation[$project->id][$effort->month] = true;
                 }
@@ -121,6 +122,27 @@ class ProjectFixedAllocationController extends Controller
         // get projects
         $projects = Project::all();
 
+        // count project per month
+        $projects_per_month = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $projects_per_month[$month] = 0;
+
+            $project_count = Project::select('*')
+                ->where(function ($query) use ($month,$year) {
+                    $query->whereNull('actual_end_date')
+                        ->orWhere('actual_end_date','>=',$year.'-'.($month < 10 ? '0'.$month : $month).'-01');
+                })
+                ->where(function ($query) use ($month,$year) {
+                    $query->where('actual_start_date','<=',$year.'-'.($month < 10 ? '0'.$month : $month).'-31')
+                        ->orWhere('actual_end_date','<=',$year.'-'.($month < 10 ? '0'.$month : $month).'-31');
+                })
+                ->get();
+
+            $projects_per_month[$month] = count($project_count);
+        }
+
+
         // get allocation per month
         $allocated_efforts = ProjectFixedAllocation::where('year', $year)
             ->whereNull('deleted_at')
@@ -134,8 +156,8 @@ class ProjectFixedAllocationController extends Controller
         foreach ($projects as $project) {
             $total_allocated_effort[$project->id] = 0;
 
-            foreach($allocated_efforts as $effort){
-                if($effort->project_id == $project->id){
+            foreach ($allocated_efforts as $effort) {
+                if ($effort->project_id == $project->id) {
                     $total_allocated_effort[$project->id] += $effort->percentage;
                     $project_fixed_allocation[$project->id][$effort->month] = true;
                 }
@@ -150,7 +172,8 @@ class ProjectFixedAllocationController extends Controller
             ->with('allocated_efforts', $allocated_efforts)
             ->with('total_allocated_effort', $total_allocated_effort)
             ->with('project_fixed_allocation', $project_fixed_allocation)
-            ->with('_year', $year);
+            ->with('_year', $year)
+            ->with('projects_per_month', $projects_per_month);
 
     }
 
@@ -177,7 +200,7 @@ class ProjectFixedAllocationController extends Controller
             foreach ($developers as $developer) {
                 // get inputted effort value
                 $effort = $efforts[$project][$developer][0];
-                if($effort === null || $effort == '') $effort = 0;
+                if ($effort === null || $effort == '') $effort = 0;
 
                 // search if existing effort per project
                 $variable_cost = VariableCost::where('project_id', $project)

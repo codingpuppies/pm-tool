@@ -52,12 +52,28 @@
             <table class="table table-striped mB-0" cellspacing="0" width="100%">
                 <thead>
                 <tr>
-                    <th class="text-center align-middle" style="background-color:{{config('variables.developer_column')}}">
+                    <th class="text-center align-middle"
+                        style="background-color:{{config('variables.developer_column')}}">
                         Project
                     </th>
-                    @for($month=0;$month<12;$month++)
-                        <td class="c-white text-center"
-                            style="background-color:{{ config('variables.table_column')[$month]}};">{{date_format(date_create("2019-".($month+1)."-01"),"M")}}</td>
+                    @for($month=1;$month<=12;$month++)
+                        <td style="padding:0!important; width:7%">
+                            <table class="table text-center"
+                                   style="height:100%; border:0 !important;margin-bottom:0!important;">
+                                <tr>
+                                    <td colspan="2" class="c-white c-white text-center"
+                                        style="background-color:{{ config('variables.table_column')[$month]}};">
+                                        {{date_format(date_create("2019-".($month)."-01"),"M")}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="c-white"
+                                        style="background-color:{{ config('variables.table_column')[$month]}}">
+                                        <h6>{{$projects_per_month[$month]}}</h6>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     @endfor
 
                 </tr>
@@ -74,37 +90,50 @@
                                         {{$project->project_name}}
                                     </td>
                                 </tr>
+
                             </table>
                         </td>
-                        @for($month=0;$month<12;$month++)
-                            @if(isset($project_fixed_allocation[$project->id][$month]))
-                                @foreach($allocated_efforts as $effort)
-                                    @if($effort->project_id == $project->id && $effort->month == $month)
-                                        <td style="width:7.5%;margin:0!important;">
-                                            <b>
-                                                <input placeholder="0" type="number" class="form-control"
-                                                       name="efforts[{{$project->id}}][{{$month}}][]"
-                                                       value="{{$effort->percentage}}">
+                        @for($month=1;$month<=12;$month++)
+                            @if(date_format(date_create($project->actual_start_date),"m") <= $month
+                            && ( $project->actual_end_date == null
+                            || date_format(date_create($project->actual_end_date),"Y-m-d") >= date_format(date_create($_year.'-'.$month.'-01'),"Y-m-d")))
 
-                                                <input type="hidden" id="old_{{$month}}_{{$project->id}}"
-                                                       value="{{$effort->percentage}}">
+                                @if(isset($project_fixed_allocation[$project->id][$month]))
+                                    @foreach($allocated_efforts as $effort)
+                                        @if($effort->project_id == $project->id && $effort->month == $month)
+                                            <td style="width:7.5%;margin:0!important;">
+                                                <b>
+                                                    <input placeholder="0" type="number" class="form-control"
+                                                           name="efforts[{{$project->id}}][{{$month}}][]"
+                                                           value="{{$effort->percentage}}">
 
-                                            </b>
-                                        </td>
-                                    @endif
-                                @endforeach
+                                                    <input type="hidden" id="old_{{$month}}_{{$project->id}}"
+                                                           value="{{$effort->percentage}}">
+
+                                                </b>
+                                            </td>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <td style="width:7.5%;margin:0!important;">
+                                        <b>
+                                            <input placeholder="0" type="number" class="form-control"
+                                                   min="0"
+                                                   name="efforts[{{$project->id}}][{{$month}}][]"
+                                                   value="0">
+
+                                            <input type="hidden" id="old_{{$month}}_{{$project->id}}"
+                                                   value="0">
+
+                                        </b>
+                                    </td>
+                                @endif
                             @else
-                                <td style="width:7.5%;margin:0!important;">
-                                    <b>
-                                        <input placeholder="0" type="number" class="form-control"
-                                               min="0"
-                                               name="efforts[{{$project->id}}][{{$month}}][]"
-                                               value="0">
-
-                                        <input type="hidden" id="old_{{$month}}_{{$project->id}}"
-                                               value="0">
-
-                                    </b>
+                                <td>
+                                    <input placeholder="" type="text" class="form-control"
+                                           disabled readonly=""
+                                           title="Unavailable"
+                                           value="">
                                 </td>
                             @endif
                         @endfor

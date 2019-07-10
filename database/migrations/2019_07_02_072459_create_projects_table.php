@@ -19,8 +19,8 @@ class CreateProjectsTable extends Migration
             $table->string('description');
             $table->string('estimated_start_date');
             $table->string('estimated_end_date');
-            $table->string('actual_start_date');
-            $table->string('actual_end_date');
+            $table->string('actual_start_date')->nullable();
+            $table->string('actual_end_date')->nullable();
             $table->float('tcp');
             $table->integer('status');
             $table->timestamps();
