@@ -36,16 +36,12 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="year">Amount</label>
-                            @if($particular=='SALARY')
+                            @if(isset($items['salary']))
                                 <input type="number" class="form-control" name="amounts[]" value="{{$salary}}">
                             @else
-                                @if(isset($items['particular']))
-                                    @if($particular == $items['particular'])
+                                @if(isset($items[$particular]))
                                         <input type="number" class="form-control" name="amounts[]"
-                                               value="{{$items['amount']}}">
-                                    @else
-                                        <input type="number" class="form-control" name="amounts[]" value="0.00">
-                                    @endif
+                                               value="{{$items[$particular]}}">
                                 @else
                                     <input type="number" class="form-control" name="amounts[]" value="0.00">
                                 @endif

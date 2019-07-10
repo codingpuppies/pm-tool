@@ -60,11 +60,16 @@ class FixedCostController extends Controller
         $month = isset($request->month) ? $request->month : (int)date('m');
         $year = isset($request->year) ? $request->year : (int)date('Y');
 
-        $items = FixedCost::where('month', $month)
+        $particulars = FixedCost::where('month', $month)
             ->where('year', $year)
             ->latest('updated_at')
             ->get();
 
+        $items = [];
+        foreach($particulars as $item)
+        {
+            $items[$item->particular]=$item->amount;
+        }
         if(count($items)==0){
             return view('admin.fixedcosts.create')
                 ->with('salary',$salary[0]['salary'])
