@@ -9,7 +9,7 @@
 
     <div class="mB-20">
 
-        <form action="{{ route(ADMIN . '.variablecosts.index') }}" method="GET" id="frm_variable_cost">
+        <form action="{{ route(ADMIN . '.projectfixedcost.edit',1) }}" method="GET" id="frm_variable_cost">
             <input type="hidden" id="is_edit" name="is_edit" value="0">
 
             <div class="row">
@@ -94,7 +94,7 @@
                             </table>
                         </td>
                         @for($month=1;$month<=12;$month++)
-                            @if(date_format(date_create($project->actual_start_date),"m") <= $month
+                            @if(date_format(date_create($project->actual_start_date),"Y-m-d") <= date_format(date_create($_year.'-'.$month.'-01'),"Y-m-d")
                             && ( $project->actual_end_date == null
                             || date_format(date_create($project->actual_end_date),"Y-m-d") >= date_format(date_create($_year.'-'.$month.'-01'),"Y-m-d")))
 
@@ -151,8 +151,7 @@
     <script>
         function submitForm() {
             const form = document.getElementById("frm_variable_cost");
-            form.action = "/admin/variablecosts/edit/edit_variable";
-            document.getElementById("is_edit").value = '{{config('variables.EDIT_ESTIMATE_VARIABLE_COST')}}';
+            form.action = {{ route(ADMIN . '.projectfixedcost.edit',1) }};
             form.submit();
         }
     </script>
