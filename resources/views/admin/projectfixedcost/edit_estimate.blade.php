@@ -94,9 +94,10 @@
                             </table>
                         </td>
                         @for($month=1;$month<=12;$month++)
-                            @if(date_format(date_create($project->actual_start_date),"Y-m-d") <= date_format(date_create($_year.'-'.$month.'-01'),"Y-m-d")
-                            && ( $project->actual_end_date == null
-                            || date_format(date_create($project->actual_end_date),"Y-m-d") >= date_format(date_create($_year.'-'.$month.'-01'),"Y-m-d")))
+                            @if(date_format(date_create($project->actual_start_date),"Y-m-d") <= date_format(date_create($_year.'-'.$month.'-31'),"Y-m-d")
+                                && ( $project->actual_end_date == null
+                                    || date_format(date_create($project->actual_end_date),"Y-m-d") >= date_format(date_create($_year.'-'.$month.'-01'),"Y-m-d"))
+                                )
 
                                 @if(isset($project_fixed_allocation[$project->id][$month]))
                                     @foreach($allocated_efforts as $effort)
@@ -105,6 +106,7 @@
                                                 <b>
                                                     <input placeholder="0" type="number" class="form-control"
                                                            name="efforts[{{$project->id}}][{{$month}}][]"
+                                                           min="0" max="100"
                                                            value="{{$effort->percentage}}">
 
                                                     <input type="hidden" id="old_{{$month}}_{{$project->id}}"
@@ -120,6 +122,7 @@
                                             <input placeholder="0" type="number" class="form-control"
                                                    min="0"
                                                    name="efforts[{{$project->id}}][{{$month}}][]"
+                                                   min="0" max="100"
                                                    value="0">
 
                                             <input type="hidden" id="old_{{$month}}_{{$project->id}}"

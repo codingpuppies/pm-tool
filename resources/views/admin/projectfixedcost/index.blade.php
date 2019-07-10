@@ -39,7 +39,7 @@
 
 
     <div class="bgc-white bd bdrs-3 p-20 mB-20 mT-20">
-        <table class="table table-hover table-striped mB-0 text-center" cellspacing="0" width="100%">
+        <table id="dataTable" class="table table-hover table-striped mB-0 text-center" cellspacing="0" width="100%">
             <thead>
             <tr>
                 <th class="text-center align-middle" style="background-color:{{config('variables.developer_column')}}">

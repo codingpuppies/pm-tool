@@ -18,7 +18,13 @@ class ProjectFixedAllocationController extends Controller
         $year = isset($request->year) ? $request->year : (int)date('Y');
 
         // get projects
-        $projects = Project::all();
+        $projects = Project::where(function ($query) use ($year) {
+            $query->whereBetween('actual_start_date', [$year . '-01-31', $year . '-12-31'])
+                ->orWhereBetween('actual_end_date', [$year . '-01-31', $year . '-12-31'])
+                ->orWhereNull('actual_end_Date');
+        })
+
+            ->get();;
 
         // get allocation per month
         $allocated_efforts = ProjectFixedAllocation::where('year', $year)
@@ -120,7 +126,13 @@ class ProjectFixedAllocationController extends Controller
         $year = isset($request->year) ? $request->year : (int)date('Y');
 
         // get projects
-        $projects = Project::all();
+        $projects = Project::where(function ($query) use ($year) {
+            $query->whereBetween('actual_start_date', [$year . '-01-31', $year . '-12-31'])
+                ->orWhereBetween('actual_end_date', [$year . '-01-31', $year . '-12-31'])
+                ->orWhereNull('actual_end_Date');
+        })
+
+            ->get();;
 
         // count project per month
         $projects_per_month = [];
@@ -129,13 +141,13 @@ class ProjectFixedAllocationController extends Controller
             $projects_per_month[$month] = 0;
 
             $project_count = Project::select('*')
-                ->where(function ($query) use ($month,$year) {
+                ->where(function ($query) use ($month, $year) {
                     $query->whereNull('actual_end_date')
-                        ->orWhere('actual_end_date','>=',$year.'-'.($month < 10 ? '0'.$month : $month).'-01');
+                        ->orWhere('actual_end_date', '>=', $year . '-' . ($month < 10 ? '0' . $month : $month) . '-01');
                 })
-                ->where(function ($query) use ($month,$year) {
-                    $query->where('actual_start_date','<=',$year.'-'.($month < 10 ? '0'.$month : $month).'-31')
-                        ->orWhere('actual_end_date','<=',$year.'-'.($month < 10 ? '0'.$month : $month).'-31');
+                ->where(function ($query) use ($month, $year) {
+                    $query->where('actual_start_date', '<=', $year . '-' . ($month < 10 ? '0' . $month : $month) . '-31')
+                        ->orWhere('actual_end_date', '<=', $year . '-' . ($month < 10 ? '0' . $month : $month) . '-31');
                 })
                 ->get();
 
