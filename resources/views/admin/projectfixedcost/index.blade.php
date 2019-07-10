@@ -77,7 +77,7 @@
                             </tr>
                         </table>
                     </td>
-                    @for($month=0;$month<12;$month++)
+                    @for($month=1;$month<=12;$month++)
                         @if(isset($project_fixed_allocation[$project->id][$month]))
                             @foreach($allocated_efforts as $effort)
                                 @if($effort->project_id == $project->id && $effort->month == $month)

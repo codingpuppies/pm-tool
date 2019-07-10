@@ -43,7 +43,7 @@
 
     <div class="bgc-white bd bdrs-3 p-20 mB-20 mT-20 pB-60">
 
-        <form action="/admin/variablecosts/1" method="post">
+        <form action="/admin/projectfixedcost/1" method="post">
             {{csrf_field()}}
             {{ method_field('PUT') }}
             <input type="hidden" name="year" value="{{$_year}}">
@@ -94,7 +94,9 @@
                             </table>
                         </td>
                         @for($month=1;$month<=12;$month++)
-                            @if(date_format(date_create($project->actual_start_date),"Y-m-d") <= date_format(date_create($_year.'-'.$month.'-31'),"Y-m-d")
+
+
+                            @if(date_format(date_create($project->actual_start_date),"Y-m-d") <= date_format(date_create($_year.'-'.$month.'-'.cal_days_in_month(CAL_GREGORIAN,$month,$_year)),"Y-m-d")
                                 && ( $project->actual_end_date == null
                                     || date_format(date_create($project->actual_end_date),"Y-m-d") >= date_format(date_create($_year.'-'.$month.'-01'),"Y-m-d"))
                                 )
@@ -105,11 +107,8 @@
                                             <td style="width:7.5%;margin:0!important;">
                                                 <b>
                                                     <input placeholder="0" type="number" class="form-control"
-                                                           name="efforts[{{$project->id}}][{{$month}}][]"
+                                                           name="allocation[{{$project->id}}][{{$month}}][]"
                                                            min="0" max="100"
-                                                           value="{{$effort->percentage}}">
-
-                                                    <input type="hidden" id="old_{{$month}}_{{$project->id}}"
                                                            value="{{$effort->percentage}}">
 
                                                 </b>
@@ -121,13 +120,9 @@
                                         <b>
                                             <input placeholder="0" type="number" class="form-control"
                                                    min="0"
-                                                   name="efforts[{{$project->id}}][{{$month}}][]"
+                                                   name="allocation[{{$project->id}}][{{$month}}][]"
                                                    min="0" max="100"
                                                    value="0">
-
-                                            <input type="hidden" id="old_{{$month}}_{{$project->id}}"
-                                                   value="0">
-
                                         </b>
                                     </td>
                                 @endif

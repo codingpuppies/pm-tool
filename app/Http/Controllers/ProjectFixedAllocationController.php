@@ -67,16 +67,7 @@ class ProjectFixedAllocationController extends Controller
      */
     public function create(Request $request)
     {
-
-        $month = isset($request->month) ? $request->month : (int)date('m');
-        $year = isset($request->year) ? $request->year : (int)date('Y');
-
-
-        return view('admin.variablecosts.create')
-            ->with('_month', $month)
-            ->with('_year', $year);
-
-
+        /**/
     }
 
     /**
@@ -87,20 +78,7 @@ class ProjectFixedAllocationController extends Controller
      */
     public function store(Request $request)
     {
-        // get particulars and amount
-        $month = $request->month;
-        $year = $request->year;
-        $particular = $request->particular;
-        $amount = $request->amount;
 
-        VariableCost::create([
-            'month' => $month,
-            'year' => $year,
-            'particular' => $particular,
-            'amount' => $amount
-        ]);
-
-        return back()->withSuccess(trans('app.success_store'));
     }
 
     /**
@@ -146,8 +124,8 @@ class ProjectFixedAllocationController extends Controller
                         ->orWhere('actual_end_date', '>=', $year . '-' . ($month < 10 ? '0' . $month : $month) . '-01');
                 })
                 ->where(function ($query) use ($month, $year) {
-                    $query->where('actual_start_date', '<=', $year . '-' . ($month < 10 ? '0' . $month : $month) . '-31')
-                        ->orWhere('actual_end_date', '<=', $year . '-' . ($month < 10 ? '0' . $month : $month) . '-31');
+                    $query->where('actual_start_date', '<=', $year . '-' . ($month < 10 ? '0' . $month : $month) . '-'.cal_days_in_month(CAL_GREGORIAN,$month,$year))
+                        ->orWhere('actual_end_date', '<=', $year . '-' . ($month < 10 ? '0' . $month : $month) . '-'.cal_days_in_month(CAL_GREGORIAN,$month,$year));
                 })
                 ->get();
 
@@ -199,59 +177,55 @@ class ProjectFixedAllocationController extends Controller
     public function update(Request $request, $mode)
     {
         /**/
-        $efforts = $request->efforts;
+        $allocations = $request->allocation;
 
         // get project id as array keys
-        $projects = array_keys($efforts);
+        $projects = array_keys($allocations);
 
         // each effort input is arrayed, so project then developer index
         foreach ($projects as $project) {
             // get developer id via array key
-            $developers = array_keys($efforts[$project]);
+            $months = array_keys($allocations[$project]);
 
-            foreach ($developers as $developer) {
+            foreach ($months as $month) {
                 // get inputted effort value
-                $effort = $efforts[$project][$developer][0];
-                if ($effort === null || $effort == '') $effort = 0;
+                $allocation = $allocations[$project][$month][0];
+
+                if ($allocation === null || $allocation == '') $allocation = 0;
 
                 // search if existing effort per project
-                $variable_cost = VariableCost::where('project_id', $project)
-                    ->where('developer_id', $developer)
-                    ->where('month', $request->month)
+                $variable_cost = ProjectFixedAllocation::where('project_id', $project)
+                    ->where('month', $month)
                     ->where('year', $request->year)
                     ->whereNull('deleted_at')
                     ->first();
-
+                
                 // if there is no value yet, create
                 if (!$variable_cost) {
 
-                    $record = new VariableCost();
+                    $record = new ProjectFixedAllocation();
                     $record->project_id = $project;
-                    $record->developer_id = $developer;
-                    $record->estimate_effort = $effort;
-                    $record->actual_effort = 0;
-                    $record->month = $request->month;
+                    $record->percentage = $allocation;
+                    $record->month = $month;
                     $record->year = $request->year;
-                    $record->mode = 1;
-                    $record->date = date('Y-m-d');
                     $record->save();
 
                 } else {
                     // if existing, update
 
-                    VariableCost::where('project_id', $project)
-                        ->where('developer_id', $developer)
-                        ->where('month', $request->month)
+                    ProjectFixedAllocation::where('project_id', $project)
+                        ->where('month', $month)
                         ->where('year', $request->year)
                         ->whereNull('deleted_at')
                         ->update([
-                            'estimate_effort' => $effort
+                            'percentage' => $allocation
                         ]);
 
                 }
             }
         }
-        return redirect()->route(ADMIN . '.variablecosts.index', ['month' => $request->month, 'year' => $request->year])->withSuccess(trans('app.success_update'));
+        return back()->withSuccess(trans('app.success_store'));
+//        return redirect()->route(ADMIN . '.projectfixedcost.index', ['year' => $request->year])->withSuccess(trans('app.success_update'));
     }
 
     /**
